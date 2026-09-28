@@ -1,0 +1,3 @@
+C:/Users/albit/OneDrive/Desktop/Computer Graphics Project/Confluence/build/CMakeFiles/confluence.dir
+C:/Users/albit/OneDrive/Desktop/Computer Graphics Project/Confluence/build/CMakeFiles/edit_cache.dir
+C:/Users/albit/OneDrive/Desktop/Computer Graphics Project/Confluence/build/CMakeFiles/rebuild_cache.dir
