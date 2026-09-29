@@ -7,26 +7,78 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 namespace {
 
 using glm::vec3;
 using glm::mat4;
 
+constexpr float PI = 3.14159265358979323846f;
+
 float smooth01(float t) { t = std::clamp(t, 0.0f, 1.0f); return t * t * (3.0f - 2.0f * t); }
 mat4 T(vec3 t) { return glm::translate(mat4(1.0f), t); }
 mat4 S(vec3 s) { return glm::scale(mat4(1.0f), s); }
 
-// Conifer in tree-local space: trunk plus three stacked cones.
-void addConifer(MeshData& d, const MeshData& cone, const MeshData& trunk, vec3 base, float h, float yaw, vec3 leaf, bool withTrunk) {
-    mat4 root = glm::rotate(T(base), yaw, vec3(0, 1, 0));
-    if (withTrunk)
-        d.append(trunk, root * T({0.0f, 0.15f * h, 0.0f}) * S({0.09f * h, 0.3f * h, 0.09f * h}), vec3(0.30f, 0.20f, 0.12f));
-    const float tiers[3][3] = {{0.18f, 0.66f, 0.30f}, {0.40f, 0.86f, 0.23f}, {0.62f, 1.00f, 0.15f}};   // y0, y1, radius (x h)
-    for (int i = 0; i < 3; ++i) {
-        float y0 = tiers[i][0] * h, y1 = tiers[i][1] * h, r = tiers[i][2] * h;
-        d.append(cone, root * T({0.0f, (y0 + y1) * 0.5f, 0.0f}) * S({2.0f * r, y1 - y0, 2.0f * r}), leaf * (0.92f + 0.08f * i));
+// Spruce of unit height: a trunk and `tiers` drooping skirts of branches.
+// Each skirt's rim alternates branch tips and notches, so the silhouette is
+// ragged rather than a smooth cone; colour runs from dark near the trunk to
+// lighter needles at the tips.
+MeshData spruce(Noise::Rng& rng, int tiers, int branches, float slenderness) {
+    MeshData d;
+    d.append(cylinderData(6), T({0.0f, 0.13f, 0.0f}) * S({0.045f, 0.26f, 0.045f}), vec3(0.27f, 0.19f, 0.12f));
+
+    const vec3 inner(0.030f, 0.10f, 0.045f);
+    for (int t = 0; t < tiers; ++t) {
+        float f = float(t) / (tiers - 1);                          // 0 = bottom tier, 1 = top
+        float yTip = 0.10f + f * 0.76f;                            // height of the branch tips
+        float r = (0.24f * std::pow(1.0f - f, 0.9f) + 0.03f) * slenderness;
+        float yTrunk = yTip + 0.12f + 0.08f * (1.0f - f);          // where the skirt meets the trunk
+        vec3 tipColor = vec3(0.10f, 0.25f, 0.09f) * rng.range(0.85f, 1.15f) * (0.8f + 0.3f * f);
+
+        unsigned int apex = (unsigned int)d.vertices.size();
+        d.vertices.push_back({{0.0f, yTrunk, 0.0f}, {0.0f, 1.0f, 0.0f}, inner});
+        const int rim = branches * 2;
+        float phase = rng.range(0.0f, 2.0f * PI);
+        for (int k = 0; k < rim; ++k) {
+            float ang = phase + 2.0f * PI * k / rim + rng.range(-0.12f, 0.12f);
+            bool tip = (k % 2) == 0;
+            float rad = tip ? r * rng.range(0.8f, 1.2f) : r * 0.5f;
+            float y = tip ? yTip - r * rng.range(0.05f, 0.25f) : yTip + r * 0.25f;   // tips droop
+            vec3 n = glm::normalize(vec3(std::cos(ang) * 0.85f, 0.6f, std::sin(ang) * 0.85f));
+            d.vertices.push_back({{std::cos(ang) * rad, y, std::sin(ang) * rad}, n, tip ? tipColor : glm::mix(inner, tipColor, 0.4f)});
+        }
+        for (int k = 0; k < rim; ++k)
+            d.indices.insert(d.indices.end(), {apex, apex + 1 + k, apex + 1 + (k + 1) % rim});
     }
+    // Leader shoot.
+    d.append(coneData(6), T({0.0f, 0.93f, 0.0f}) * S({0.05f, 0.16f, 0.05f}), vec3(0.09f, 0.22f, 0.08f));
+    return d;
+}
+
+// Rounded broadleaf bush/tree of unit height: a few lumpy foliage masses.
+MeshData broadleaf(Noise::Rng& rng) {
+    MeshData d;
+    int masses = 5 + (int)(rng.next() * 3.0f);
+    for (int i = 0; i < masses; ++i) {
+        MeshData blob = sphereData(6, 9);
+        float seed = rng.range(0.0f, 50.0f);
+        for (Vertex& v : blob.vertices) {
+            vec3 q = v.position * 2.0f;
+            v.position = q * (0.8f + 0.35f * Noise::fbm(q.x * 1.6f + seed, q.z * 1.6f + q.y, 2, 13));
+        }
+        computeSmoothNormals(blob.vertices, blob.indices);
+        vec3 c(rng.range(-0.22f, 0.22f), rng.range(0.45f, 0.72f), rng.range(-0.22f, 0.22f));
+        float r = rng.range(0.20f, 0.30f);
+        d.append(blob, T(c) * S(vec3(r)));
+    }
+    // Shade the foliage: darker underneath, sunlit yellow-green on top.
+    for (Vertex& v : d.vertices) {
+        float up = smooth01((v.position.y - 0.2f) / 0.75f);
+        v.color = glm::mix(vec3(0.09f, 0.21f, 0.06f), vec3(0.32f, 0.50f, 0.13f), up);
+    }
+    d.append(cylinderData(6), T({0.0f, 0.18f, 0.0f}) * S({0.06f, 0.36f, 0.06f}), vec3(0.30f, 0.22f, 0.14f));
+    return d;
 }
 
 float distToSegment(glm::vec2 p, glm::vec2 a, glm::vec2 b) {
@@ -55,30 +107,52 @@ bool keepClear(float x, float z, float ground) {
 }
 
 MeshData build() {
-    MeshData d;
-    MeshData cone = coneData(10), trunk = cylinderData(6);
     Noise::Rng rng(1234);
 
-    auto scatter = [&](float x0, float x1, float z0, float z1, float spacing, float hMin, float hMax, float density, bool trunks, float minNormalY) {
-        for (float z = z0; z < z1; z += spacing) {
-            for (float x = x0; x < x1; x += spacing) {
-                float px = x + rng.range(-0.45f, 0.45f) * spacing;
-                float pz = z + rng.range(-0.45f, 0.45f) * spacing;
+    // Prototypes: detailed spruces for the near slopes, lighter ones for the
+    // distant shores (where fog hides the detail), and broadleaf bushes.
+    std::vector<MeshData> nearSpruce, farSpruce, bushes;
+    for (int i = 0; i < 6; ++i) nearSpruce.push_back(spruce(rng, 9, 7, rng.range(0.85f, 1.1f)));
+    for (int i = 0; i < 4; ++i) farSpruce.push_back(spruce(rng, 5, 5, rng.range(0.9f, 1.1f)));
+    for (int i = 0; i < 5; ++i) bushes.push_back(broadleaf(rng));
+
+    MeshData d;
+    auto place = [&](const MeshData& proto, float x, float z, float ground, float height, float width) {
+        vec3 tint = vec3(rng.range(0.85f, 1.15f), rng.range(0.9f, 1.12f), rng.range(0.85f, 1.1f));
+        d.append(proto, T({x, ground - 0.25f, z}) * glm::rotate(mat4(1.0f), rng.range(0.0f, 2.0f * PI), vec3(0, 1, 0))
+                        * S({width, height, width}), tint);
+    };
+
+    struct Region { float x0, x1, z0, z1, spacing, hMin, hMax, density, minNormalY, bushShare; bool detailed; };
+    const Region regions[] = {
+        {-80.0f, 14.0f, -170.0f, 12.0f, 2.8f, 5.0f, 9.5f, 0.95f, 0.55f, 0.22f, true},    // left hillside
+        {20.0f, 75.0f, -90.0f, 10.0f, 3.2f, 5.0f, 9.0f, 0.90f, 0.78f, 0.25f, true},      // right cliff top
+        {30.0f, 240.0f, -330.0f, -95.0f, 5.0f, 7.0f, 11.0f, 0.97f, 0.70f, 0.0f, false},   // far right shore
+        {-220.0f, -40.0f, -330.0f, -150.0f, 5.5f, 7.0f, 11.0f, 0.90f, 0.70f, 0.0f, false}, // far left shore
+    };
+    for (const Region& g : regions) {
+        for (float z = g.z0; z < g.z1; z += g.spacing) {
+            for (float x = g.x0; x < g.x1; x += g.spacing) {
+                float px = x + rng.range(-0.45f, 0.45f) * g.spacing;
+                float pz = z + rng.range(-0.45f, 0.45f) * g.spacing;
                 float clump = Noise::fbm(px * 0.03f, pz * 0.03f, 3, 77);
-                if (rng.next() > density * smooth01((clump - 0.35f) * 4.0f)) continue;
+                if (rng.next() > g.density * smooth01((clump - 0.35f) * 4.0f)) continue;
                 float h = terrainHeight(px, pz);
                 if (keepClear(px, pz, h)) continue;
                 float water = Layout::damSide(px, pz) < 0.0f ? Layout::LAKE_LEVEL : Layout::RIVER_LEVEL;
-                if (h < water + 1.0f || terrainNormal(px, pz).y < minNormalY) continue;
-                vec3 leaf = vec3(0.07f, 0.22f, 0.09f) * rng.range(0.8f, 1.25f) + vec3(0.0f, rng.range(-0.02f, 0.03f), 0.0f);
-                addConifer(d, cone, trunk, {px, h - 0.2f, pz}, rng.range(hMin, hMax), rng.range(0.0f, 6.28f), leaf, trunks);
+                if (h < water + 1.0f || terrainNormal(px, pz).y < g.minNormalY) continue;
+
+                if (rng.next() < g.bushShare) {
+                    float size = rng.range(2.0f, 3.8f);
+                    place(bushes[(size_t)(rng.next() * bushes.size()) % bushes.size()], px, pz, h, size, size * rng.range(0.9f, 1.3f));
+                } else {
+                    float height = rng.range(g.hMin, g.hMax);
+                    const auto& protos = g.detailed ? nearSpruce : farSpruce;
+                    place(protos[(size_t)(rng.next() * protos.size()) % protos.size()], px, pz, h, height, height * rng.range(0.9f, 1.1f));
+                }
             }
         }
-    };
-    scatter(-80.0f, 14.0f, -170.0f, 12.0f, 3.2f, 3.5f, 7.0f, 0.95f, true, 0.55f);       // left hillside, steep flanks too
-    scatter(20.0f, 75.0f, -90.0f, 10.0f, 4.0f, 4.0f, 7.5f, 0.90f, true, 0.78f);         // right cliff top
-    scatter(30.0f, 240.0f, -330.0f, -95.0f, 8.0f, 6.0f, 10.0f, 0.90f, false, 0.78f);    // far right shore
-    scatter(-220.0f, -40.0f, -330.0f, -150.0f, 8.0f, 6.0f, 10.0f, 0.80f, false, 0.78f); // far left shore
+    }
     return d;
 }
 
@@ -87,5 +161,5 @@ MeshData build() {
 Trees::Trees() : mesh(build()) {}
 
 void Trees::draw(const Shader& shader) const {
-    drawMesh(shader, mesh, mat4(1.0f), Materials::MATTE);
+    drawMesh(shader, mesh, mat4(1.0f), Materials::FOLIAGE);
 }

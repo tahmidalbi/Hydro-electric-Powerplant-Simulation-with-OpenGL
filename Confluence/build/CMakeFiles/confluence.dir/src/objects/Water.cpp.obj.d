@@ -249,6 +249,8 @@ CMakeFiles/confluence.dir/src/objects/Water.cpp.obj: \
  C:/msys64/mingw64/include/glm/detail/type_half.inl \
  C:/msys64/mingw64/include/glm/integer.hpp \
  C:/msys64/mingw64/include/glm/detail/func_integer.inl \
+ C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Cascade.h \
+ C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Dam.h \
  C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Layout.h \
  C:/msys64/mingw64/include/glm/gtc/matrix_transform.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_projection.hpp \

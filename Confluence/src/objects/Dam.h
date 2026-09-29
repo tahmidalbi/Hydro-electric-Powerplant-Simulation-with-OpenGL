@@ -11,13 +11,15 @@ struct MeshLibrary;
 class Dam {
 public:
     Dam();
-    // gateOpening: 0 = gates shut (no spill), 1 = fully raised.
+    // Opaque parts. gateOpening: 0 = gates shut (no spill), 1 = fully raised.
     void draw(const Shader& shader, const MeshLibrary& meshes, float gateOpening) const;
+    // Translucent water pouring down the two spillway chutes (transparent pass).
+    void drawSpillwayWater(const Shader& shader, float gateOpening) const;
 
     // Where the water wheel's axle sits, in dam-local space.
     static glm::vec3 wheelMount();
 
 private:
     Mesh structure;   // everything static, baked in dam-local space
-    Mesh cascade;     // one spillway chute of falling water, reused per bay
+    Mesh spillway;    // the water sheets of both bays
 };

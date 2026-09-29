@@ -27,6 +27,11 @@ uniform int   uTermMask;
 uniform vec3  uFogColor;
 uniform float uFogDensity;
 
+// Translucency: uAlpha < 1 for water sheets and spray; uSoftEdge > 0 fades a
+// surface out where it turns edge-on, so spray blobs read as soft mist.
+uniform float uAlpha;
+uniform float uSoftEdge;
+
 vec3 computeLighting(vec3 N, vec3 fragPos, vec3 albedo) {
     vec3 V = normalize(uViewPos - fragPos);
 
@@ -81,5 +86,11 @@ void main() {
 
     float d = length(vFragPos - uViewPos) * uFogDensity;
     color = mix(color, uFogColor, 1.0 - exp(-d * d));
-    FragColor = vec4(color, 1.0);
+
+    float alpha = uAlpha;
+    if (uSoftEdge > 0.0) {
+        vec3 V = normalize(uViewPos - vFragPos);
+        alpha *= pow(abs(dot(normalize(vNormal), V)), uSoftEdge);
+    }
+    FragColor = vec4(color, alpha);
 }

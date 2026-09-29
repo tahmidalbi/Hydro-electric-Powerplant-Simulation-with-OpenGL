@@ -320,6 +320,30 @@ src/objects/Boat.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Boat.cpp.s
 .PHONY : src/objects/Boat.cpp.s
 
+src/objects/Cascade.obj: src/objects/Cascade.cpp.obj
+.PHONY : src/objects/Cascade.obj
+
+# target to build an object file
+src/objects/Cascade.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj
+.PHONY : src/objects/Cascade.cpp.obj
+
+src/objects/Cascade.i: src/objects/Cascade.cpp.i
+.PHONY : src/objects/Cascade.i
+
+# target to preprocess a source file
+src/objects/Cascade.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Cascade.cpp.i
+.PHONY : src/objects/Cascade.cpp.i
+
+src/objects/Cascade.s: src/objects/Cascade.cpp.s
+.PHONY : src/objects/Cascade.s
+
+# target to generate assembly for a file
+src/objects/Cascade.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Cascade.cpp.s
+.PHONY : src/objects/Cascade.cpp.s
+
 src/objects/Cloud.obj: src/objects/Cloud.cpp.obj
 .PHONY : src/objects/Cloud.obj
 
@@ -641,6 +665,9 @@ help:
 	@echo ... src/objects/Boat.obj
 	@echo ... src/objects/Boat.i
 	@echo ... src/objects/Boat.s
+	@echo ... src/objects/Cascade.obj
+	@echo ... src/objects/Cascade.i
+	@echo ... src/objects/Cascade.s
 	@echo ... src/objects/Cloud.obj
 	@echo ... src/objects/Cloud.i
 	@echo ... src/objects/Cloud.s

@@ -191,11 +191,26 @@ CMakeFiles/confluence.dir/src/objects/Boat.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/confluence.dir/src/objects/Boat.cpp.s"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Boat.cpp" -o CMakeFiles\confluence.dir\src\objects\Boat.cpp.s
 
+CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj: CMakeFiles/confluence.dir/flags.make
+CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
+CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Cascade.cpp
+CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Cascade.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Cascade.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Cascade.cpp"
+
+CMakeFiles/confluence.dir/src/objects/Cascade.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/confluence.dir/src/objects/Cascade.cpp.i"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Cascade.cpp" > CMakeFiles\confluence.dir\src\objects\Cascade.cpp.i
+
+CMakeFiles/confluence.dir/src/objects/Cascade.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/confluence.dir/src/objects/Cascade.cpp.s"
+	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Cascade.cpp" -o CMakeFiles\confluence.dir\src\objects\Cascade.cpp.s
+
 CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj: CMakeFiles/confluence.dir/flags.make
 CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Cloud.cpp
 CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Cloud.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Cloud.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Cloud.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Cloud.cpp.i: cmake_force
@@ -210,7 +225,7 @@ CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj: CMakeFiles/confluence.dir/fla
 CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Dam.cpp
 CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Dam.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Dam.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Dam.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Dam.cpp.i: cmake_force
@@ -225,7 +240,7 @@ CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj: CMakeFiles/confluence.dir/f
 CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Fence.cpp
 CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Fence.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Fence.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Fence.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Fence.cpp.i: cmake_force
@@ -240,7 +255,7 @@ CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj: CMakeFiles/confluence.dir/f
 CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Rocks.cpp
 CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Rocks.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Rocks.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Rocks.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Rocks.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Rocks.cpp.i: cmake_force
@@ -255,7 +270,7 @@ CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj: CMakeFiles/confluence.dir/f
 CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Scene.cpp
 CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Scene.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Scene.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Scene.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Scene.cpp.i: cmake_force
@@ -270,7 +285,7 @@ CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj: CMakeFiles/confluence.dir/fla
 CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Sky.cpp
 CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Sky.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Sky.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Sky.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Sky.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Sky.cpp.i: cmake_force
@@ -285,7 +300,7 @@ CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj: CMakeFiles/confluence.
 CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/SolarArray.cpp
 CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\SolarArray.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\SolarArray.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\SolarArray.cpp"
 
 CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.i: cmake_force
@@ -300,7 +315,7 @@ CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj: CMakeFiles/confluence.dir
 CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Terrain.cpp
 CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Terrain.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Terrain.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Terrain.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Terrain.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Terrain.cpp.i: cmake_force
@@ -315,7 +330,7 @@ CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj: CMakeFiles/confluence.dir/f
 CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Trees.cpp
 CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Trees.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Trees.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Trees.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Trees.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Trees.cpp.i: cmake_force
@@ -330,7 +345,7 @@ CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj: CMakeFiles/confluence.dir
 CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Turbine.cpp
 CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Turbine.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Turbine.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Turbine.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Turbine.cpp.i: cmake_force
@@ -345,7 +360,7 @@ CMakeFiles/confluence.dir/src/objects/Water.cpp.obj: CMakeFiles/confluence.dir/f
 CMakeFiles/confluence.dir/src/objects/Water.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/Water.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/Water.cpp
 CMakeFiles/confluence.dir/src/objects/Water.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/confluence.dir/src/objects/Water.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/confluence.dir/src/objects/Water.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/Water.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\Water.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\Water.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\Water.cpp"
 
 CMakeFiles/confluence.dir/src/objects/Water.cpp.i: cmake_force
@@ -360,7 +375,7 @@ CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj: CMakeFiles/confluence.
 CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj: CMakeFiles/confluence.dir/includes_CXX.rsp
 CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj: C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/objects/WaterWheel.cpp
 CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj: CMakeFiles/confluence.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj"
 	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.obj -MF CMakeFiles\confluence.dir\src\objects\WaterWheel.cpp.obj.d -o CMakeFiles\confluence.dir\src\objects\WaterWheel.cpp.obj -c "C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\src\objects\WaterWheel.cpp"
 
 CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.i: cmake_force
@@ -381,6 +396,7 @@ confluence_OBJECTS = \
 "CMakeFiles/confluence.dir/src/core/Screenshot.cpp.obj" \
 "CMakeFiles/confluence.dir/src/core/Shader.cpp.obj" \
 "CMakeFiles/confluence.dir/src/objects/Boat.cpp.obj" \
+"CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj" \
 "CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj" \
 "CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj" \
 "CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj" \
@@ -405,6 +421,7 @@ confluence.exe: CMakeFiles/confluence.dir/src/core/Render.cpp.obj
 confluence.exe: CMakeFiles/confluence.dir/src/core/Screenshot.cpp.obj
 confluence.exe: CMakeFiles/confluence.dir/src/core/Shader.cpp.obj
 confluence.exe: CMakeFiles/confluence.dir/src/objects/Boat.cpp.obj
+confluence.exe: CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj
 confluence.exe: CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj
 confluence.exe: CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj
 confluence.exe: CMakeFiles/confluence.dir/src/objects/Fence.cpp.obj
@@ -421,7 +438,7 @@ confluence.exe: CMakeFiles/confluence.dir/build.make
 confluence.exe: CMakeFiles/confluence.dir/linkLibs.rsp
 confluence.exe: CMakeFiles/confluence.dir/objects1.rsp
 confluence.exe: CMakeFiles/confluence.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_21) "Linking CXX executable confluence.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="C:\Users\albit\OneDrive\Desktop\Computer Graphics Project\Confluence\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_22) "Linking CXX executable confluence.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\confluence.dir\link.txt --verbose=$(VERBOSE)
 	"C:\Program Files\CMake\bin\cmake.exe" -E copy_directory "C:/Users/albit/OneDrive/Desktop/Computer Graphics Project/Confluence/shaders" "C:/Users/albit/OneDrive/Desktop/Computer Graphics Project/Confluence/build/shaders"
 

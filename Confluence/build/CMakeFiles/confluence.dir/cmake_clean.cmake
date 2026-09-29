@@ -15,6 +15,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/confluence.dir/src/main.cpp.obj.d"
   "CMakeFiles/confluence.dir/src/objects/Boat.cpp.obj"
   "CMakeFiles/confluence.dir/src/objects/Boat.cpp.obj.d"
+  "CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj"
+  "CMakeFiles/confluence.dir/src/objects/Cascade.cpp.obj.d"
   "CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj"
   "CMakeFiles/confluence.dir/src/objects/Cloud.cpp.obj.d"
   "CMakeFiles/confluence.dir/src/objects/Dam.cpp.obj"

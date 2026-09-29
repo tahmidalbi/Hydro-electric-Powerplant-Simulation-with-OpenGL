@@ -1,4 +1,5 @@
 #include "Dam.h"
+#include "Cascade.h"
 #include "Layout.h"
 #include "../core/Material.h"
 #include "../core/MeshLibrary.h"
@@ -8,6 +9,7 @@
 #include <algorithm>
 #include <cmath>
 #include <utility>
+#include <vector>
 
 namespace {
 
@@ -37,7 +39,6 @@ constexpr float SPILL_X1 = PIER_X[2] + PIER_W * 0.5f;
 
 mat4 T(vec3 t) { return glm::translate(mat4(1.0f), t); }
 mat4 S(vec3 s) { return glm::scale(mat4(1.0f), s); }
-mat4 RX(float rad) { return glm::rotate(mat4(1.0f), rad, vec3(1, 0, 0)); }
 
 // Downstream face line of the full-height section.
 float faceZ(float y) { return TOE_Z - (TOE_Z - CREST_Z) * y / CREST; }
@@ -103,7 +104,7 @@ MeshData buildStructure() {
         b.box({px - 1.75f, 22.0f, -1.25f}, {px + 1.75f, 22.35f, 3.25f}, ROOF);
         for (float wx : {-0.7f, 0.7f})
             b.box({px + wx - 0.35f, 20.0f, 3.0f}, {px + wx + 0.35f, 21.2f, 3.06f}, WINDOW);
-        b.box({x0 + 0.4f, 0.0f, 11.5f}, {x1 - 0.4f, 1.6f, 17.0f}, CONCRETE_DARK);   // training wall
+        b.box({x0 + 0.4f, 0.0f, 10.5f}, {x1 - 0.4f, 1.0f, 14.5f}, CONCRETE_DARK);   // training wall
     }
     b.box({SPILL_X0, 18.3f, -0.8f}, {SPILL_X1, 19.0f, 2.6f}, CONCRETE);
     b.railing({SPILL_X0, 19.0f, 2.5f}, {SPILL_X1, 19.0f, 2.5f});
@@ -124,54 +125,32 @@ MeshData buildStructure() {
     b.railing({PH_X0, PH_H + 0.3f, 5.0f}, {PH_X0, PH_H + 0.3f, PH_FRONT});
     b.railing({PH_X1, PH_H + 0.3f, 5.0f}, {PH_X1, PH_H + 0.3f, PH_FRONT});
 
-    // Water-wheel channel: tailrace sill, bearing pier and outer wall.
-    b.box({PH_X1, -0.5f, 6.0f}, {72.0f, 0.5f, 16.0f}, CONCRETE_DARK);
+    // Water-wheel channel: raised tailrace sill (its water spills off the end
+    // into the river), bearing pier and outer wall.
+    b.box({PH_X1, -0.5f, 6.0f}, {72.0f, 2.4f, 16.0f}, CONCRETE_DARK);
     b.box({WHEEL_MOUNT.x - 0.9f, 0.0f, 7.0f}, {WHEEL_MOUNT.x + 0.9f, WHEEL_MOUNT.y, 9.2f}, CONCRETE_DARK);
-    b.box({71.5f, 0.0f, 6.0f}, {72.7f, 3.5f, 16.0f}, CONCRETE);
+    b.box({71.5f, 0.0f, 6.0f}, {72.7f, 4.2f, 16.0f}, CONCRETE);
     return b.d;
 }
 
-// Water pouring under a gate, over the ogee crest and down the spillway face,
-// built in bay-local space (x across the bay, y/z as dam-local).
-MeshData buildCascade() {
+// Water pouring out under each gate, over the ogee crest and down the
+// spillway face into the basin, in dam-local space.
+MeshData buildSpillwayWater() {
+    // Profile (z, y): under the gate, over the crest, hugging the downstream
+    // face (z = 3.84 + 0.536 * (11.5 - y)), then out along the basin.
+    const std::vector<glm::vec2> profile = {{0.2f, 12.3f}, {2.4f, 12.2f}, {3.9f, 11.7f}, {5.2f, 9.0f}, {6.8f, 6.0f},
+                                            {8.4f, 3.0f}, {9.5f, 1.2f}, {11.0f, 0.62f}, {13.0f, 0.62f}};
     MeshData d;
-    MeshData cube = cubeData(), puff = sphereData(6, 10);
-    Noise::Rng rng(21);
-    const glm::vec2 path[] = {{0.6f, 12.3f}, {3.9f, 12.1f}, {5.1f, 10.2f}, {6.7f, 7.2f},
-                              {8.3f, 4.2f}, {9.7f, 1.7f}, {11.6f, 0.9f}, {14.0f, 0.75f}};   // (z, y)
-    const int n = sizeof(path) / sizeof(path[0]);
-
-    for (int i = 0; i + 1 < n; ++i) {
-        glm::vec2 a = path[i], c = path[i + 1];
-        glm::vec2 dir = c - a;
-        float t = float(i) / (n - 2);
-        float angle = std::atan2(-dir.y, dir.x);   // turns local +z onto the flow direction
-        float width = BAY_W + 0.8f * t, thick = 0.45f + 0.9f * t;
-        vec3 col = glm::mix(vec3(0.78f, 0.89f, 0.96f), vec3(1.0f), t);
-        mat4 seg = T({0.0f, (a.y + c.y) * 0.5f, (a.x + c.x) * 0.5f}) * RX(angle);
-        d.append(cube, seg * S({width, thick, glm::length(dir) * 1.12f}), col);
-
-        // Froth lumps riding on the sheet.
-        glm::vec2 normal = glm::normalize(glm::vec2(-dir.y, dir.x));   // (z, y), away from the concrete
-        for (int k = 0; k < 10; ++k) {
-            float s = rng.next();
-            glm::vec2 p = a + dir * s + normal * thick * 0.45f;
-            float r = rng.range(0.35f, 0.8f) * (0.7f + t);
-            float w = rng.range(0.93f, 1.0f);
-            d.append(puff, T({rng.range(-0.45f, 0.45f) * width, p.y, p.x}) * RX(angle) * S({r * 2.0f, r * 0.8f, r * 2.6f}), vec3(w, w, 1.0f));
-        }
-    }
-    // Spray where the chute hits the basin.
-    for (int k = 0; k < 18; ++k) {
-        float r = rng.range(0.8f, 1.6f);
-        d.append(puff, T({rng.range(-0.5f, 0.5f) * (BAY_W + 1.0f), rng.range(0.8f, 2.0f), rng.range(10.0f, 14.5f)}) * S(vec3(r * 2.0f, r * 1.4f, r * 2.0f)), vec3(1.0f));
+    for (int bay = 0; bay < 2; ++bay) {
+        float cx = (PIER_X[bay] + PIER_X[bay + 1]) * 0.5f;
+        d.append(buildWaterSheet(profile, BAY_W - 0.1f, BAY_W + 0.6f, 0.35f, 21u + bay * 17u), T({cx, 0.0f, 0.0f}));
     }
     return d;
 }
 
 }
 
-Dam::Dam() : structure(buildStructure()), cascade(buildCascade()) {}
+Dam::Dam() : structure(buildStructure()), spillway(buildSpillwayWater()) {}
 
 glm::vec3 Dam::wheelMount() { return WHEEL_MOUNT; }
 
@@ -184,8 +163,10 @@ void Dam::draw(const Shader& shader, const MeshLibrary& m, float gateOpening) co
         glm::mat4 gateSlot = root * T({cx, SPILL_CREST, 0.3f});
         glm::mat4 gate = gateSlot * T({0.0f, 2.9f + 3.2f * gateOpening, 0.0f});
         drawMesh(shader, m.cube, gate * S({BAY_W, 5.8f, 0.5f}), Materials::STEEL);
-
-        if (gateOpening > 0.02f)
-            drawMesh(shader, cascade, root * T({cx, 0.0f, 0.0f}), Materials::FOAM);
     }
+}
+
+void Dam::drawSpillwayWater(const Shader& shader, float gateOpening) const {
+    if (gateOpening > 0.02f)
+        drawMesh(shader, spillway, Layout::damRoot(), Materials::WATERFALL);
 }

@@ -2,6 +2,7 @@
 #include "Layout.h"
 #include "Turbine.h"
 #include "../core/Shader.h"
+#include <glad/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <cmath>
 
@@ -59,4 +60,15 @@ void Scene::draw(const Shader& shader, const MeshLibrary& m) const {
     shader.setFloat("uFogDensity", 0.0f);
     for (size_t i = 0; i < clouds.size(); ++i) clouds[i].draw(shader, cloudRoots[i]);
     shader.setFloat("uFogDensity", Layout::FOG_DENSITY);
+
+    // Transparent pass, after everything opaque: the near-opaque falling
+    // sheets still write depth; the spray on top of them does not.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    dam.drawSpillwayWater(shader, Layout::GATE_OPENING);
+    water.drawFalls(shader);
+    glDepthMask(GL_FALSE);
+    water.drawSpray(shader);
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
 }

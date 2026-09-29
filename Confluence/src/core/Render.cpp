@@ -16,6 +16,8 @@ void drawMesh(const Shader& shader, const Mesh& mesh, const glm::mat4& model, co
     shader.setVec3("uKs", mat.ks);
     shader.setVec3("uEmission", mat.emission);
     shader.setFloat("uShininess", mat.shininess);
+    shader.setFloat("uAlpha", mat.alpha);
+    shader.setFloat("uSoftEdge", mat.softEdge);
 
     mesh.draw();
 }

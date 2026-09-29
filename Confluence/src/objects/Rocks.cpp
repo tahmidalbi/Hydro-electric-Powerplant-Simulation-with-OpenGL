@@ -17,9 +17,8 @@ const Placement ROCKS[] = {
     {-7.0f, -12.0f, 1.0f}, {-5.2f, -13.5f, 0.6f}, {-9.0f, -11.0f, 0.8f},
     {-11.0f, -13.0f, 1.2f}, {-4.0f, -11.5f, 0.7f}, {-12.5f, -16.0f, 0.9f}, {-6.0f, -15.5f, 0.5f},
     {-2.0f, -18.0f, 0.9f}, {0.3f, -17.5f, 0.6f}, {-0.8f, -18.8f, 0.8f}, {-3.5f, -19.5f, 0.6f},
-    // River banks and the foot of the right cliff.
-    {5.0f, -30.0f, 1.3f}, {1.0f, -45.0f, 1.6f}, {-3.0f, -55.0f, 1.8f}, {-8.0f, -70.0f, 2.0f},
-    {24.0f, -50.0f, 2.0f}, {27.0f, -44.0f, 1.6f}, {22.0f, -40.0f, 1.2f}, {-12.0f, -90.0f, 2.4f},
+    // The foot of the right cliff, below the water wheel.
+    {27.0f, -50.0f, 2.0f}, {28.5f, -44.0f, 1.6f},
 };
 
 MeshData build() {
