@@ -2,12 +2,14 @@
 //  HYDRO // Dam to Turbine  -  OpenGL computer graphics project
 //
 //  Recreates the first 70 seconds of the "Dam Hydroelectric Power Plant"
-//  3D animation:  spillway -> dam survey -> under water to the trash rack ->
-//  trash filtering -> intake gate -> penstock -> ray-traced high-speed flow.
+//  3D animation as one continuous journey of the water:
+//  preview of the running plant -> reservoir -> trash rack -> intake gate
+//  -> penstock -> turbine -> ray-traced high-speed pipe.
 //
 //  Normal start:        hydro.exe
 //  Window size:         hydro.exe --size 1920 1080
-//  Save pictures:       hydro.exe --shot <scene 1-7> <seconds> <file.bmp> [--press <sec> <buttonId>] ...
+//  Save pictures:       hydro.exe --shot <scene 1-5> <seconds> <file.bmp> [--press <sec> <buttonId>] ...
+//  Measure speed:       hydro.exe --bench
 // =============================================================================
 #include <iostream>
 #include <string>
@@ -17,13 +19,17 @@
 
 int main(int argc, char** argv) {
     int w = 1600, h = 900;
-    bool hud = true, bench = false;
+    bool hud = true, bench = false, noPost = false;
+    float autoTest = 0;
+    std::string autoFile;
     std::vector<ShotRequest> shots;
     for (int i = 1; i < argc; i++) {
         std::string a = argv[i];
         if (a == "--size" && i + 2 < argc) { w = std::atoi(argv[i + 1]); h = std::atoi(argv[i + 2]); i += 2; }
         else if (a == "--nohud") hud = false;
         else if (a == "--bench") bench = true;
+        else if (a == "--nopost") noPost = true;
+        else if (a == "--autotest" && i + 2 < argc) { autoTest = (float)std::atof(argv[i + 1]); autoFile = argv[i + 2]; i += 2; }
         else if (a == "--shot" && i + 3 < argc) {
             ShotRequest s;
             s.scene = std::atoi(argv[i + 1]) - 1;
@@ -34,12 +40,6 @@ int main(int argc, char** argv) {
         } else if (a == "--press" && i + 2 < argc && !shots.empty()) {
             shots.back().presses.push_back({(float)std::atof(argv[i + 1]), std::atoi(argv[i + 2])});
             i += 2;
-        } else if (a == "--orbit" && i + 3 < argc && !shots.empty()) {
-            shots.back().free = true;
-            shots.back().yaw = (float)std::atof(argv[i + 1]);
-            shots.back().pitch = (float)std::atof(argv[i + 2]);
-            shots.back().zoom = (float)std::atof(argv[i + 3]);
-            i += 3;
         }
     }
 
@@ -53,7 +53,9 @@ int main(int argc, char** argv) {
         std::cerr << "Could not create the OpenGL 3.3 window.\n";
         return 1;
     }
+    if (noPost) app.setPostFX(false);
     if (bench) app.runBenchmark();
+    else if (autoTest > 0) app.runAutoTest(autoTest, autoFile);
     else if (!shots.empty()) app.runShots(shots, hud);
     else app.run();
     app.shutdown();

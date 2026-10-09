@@ -20,7 +20,7 @@ void main() {
     vec3 albedo = surfaceAlbedo(vWorldPos, N, vUV, spec, shin, refl, alpha, emis);
 
     vec3 col;
-    if (uPattern == PAT_BEAM) {
+    if (uPattern == PAT_BEAM || uPattern == PAT_FLOW) {
         col = emis;                                   // pure glow, no lighting
     } else {
         float sh = shadowFactor(vWorldPos, N);

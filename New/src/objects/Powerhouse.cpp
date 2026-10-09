@@ -1,194 +1,174 @@
 #include "Powerhouse.h"
+#include "TurbineUnit.h"
 #include "Materials.h"
 
-// Building footprint (world metres)
-static const float X0 = 48, X1 = 68, Z0 = 48, Z1 = 74;
-static const float FLOOR_Y = 4, GEN_FLOOR_Y = 12, ROOF_Y = 24;
-static const Vec3 UNIT(58, 6.5f, 61);      // centre of the turbine (on the pipe axis)
+using namespace HouseDims;
 
 void Powerhouse::build() {
-    // penstock: out of the dam face, down the slope, horizontal through the building
-    std::vector<Vec3> corners = {Vec3(58, 38, 24), Vec3(58, 9, 48.9f), Vec3(58, 6.5f, 55), Vec3(58, 6.5f, 80)};
+    // penstock: starts at the bulkhead of the intake conduit inside the dam (z = 14),
+    // leaves the downstream face, runs down the slope into the turbine pit and ends
+    // at the main inlet valve (z = 57).
+    std::vector<Vec3> corners = {Vec3(58, 39, 14), Vec3(58, 39, 23), Vec3(58, 9.5f, 47.5f), Vec3(58, 6.0f, 51.5f), Vec3(58, 6.0f, 57.0f)};
     penstock.build(corners, 2.0f, 5.0f, Vec3(-1, 0, 0), 90.0f, 6.0f);
 
+    const float GX = TurbineDims::CENTRE.x, GZ = TurbineDims::CENTRE.z;
     MeshBuilder b;
-    // ---- substructure + walls (the -x wall is missing: cut-away) ------------
-    b.box(Vec3(X0, -3, Z0), Vec3(X1 + 2, FLOOR_Y, Z1));                 // foundation block
-    b.box(Vec3(X1, FLOOR_Y, Z0), Vec3(X1 + 2, ROOF_Y, Z1));             // back wall
-    b.box(Vec3(X0, FLOOR_Y, Z0), Vec3(X1, ROOF_Y, Z0 + 1.6f));          // dam-side wall
-    b.box(Vec3(X0, FLOOR_Y, Z1 - 1.6f), Vec3(X1, ROOF_Y, Z1));          // river-side wall
-    b.box(Vec3(X0 + 6, ROOF_Y, Z0), Vec3(X1 + 2, ROOF_Y + 1.4f, Z1));   // roof (cut back)
-    b.box(Vec3(X0 + 6, ROOF_Y + 1.4f, Z0), Vec3(X1 + 2, ROOF_Y + 2.4f, Z0 + 0.3f)); // roof parapet
+    // ---- foundation (the pit floor) -----------------------------------------
+    b.box(Vec3(X0, -6, Z0), Vec3(X1 + 2, PIT_Y, Z1));
+    foundation = b.build();
+
+    // ---- walls + roof (the -x wall is missing: cut-away) --------------------
+    b.clear();
+    b.box(Vec3(X1, PIT_Y, Z0), Vec3(X1 + 2, ROOF_Y, Z1));                 // back wall
+    b.box(Vec3(X0, PIT_Y, Z0), Vec3(X1, ROOF_Y, Z0 + 1.6f));              // dam-side wall
+    b.box(Vec3(X0, PIT_Y, Z1 - 1.6f), Vec3(X1, ROOF_Y, Z1));              // river-side wall
+    b.box(Vec3(X0 + 6, ROOF_Y, Z0), Vec3(X1 + 2, ROOF_Y + 1.4f, Z1));     // roof (cut back)
+    b.box(Vec3(X0 + 6, ROOF_Y + 1.4f, Z0), Vec3(X1 + 2, ROOF_Y + 2.4f, Z0 + 0.3f));
     b.box(Vec3(X0 + 6, ROOF_Y + 1.4f, Z1 - 0.3f), Vec3(X1 + 2, ROOF_Y + 2.4f, Z1));
-    // windows frames on the river-side wall (outside)
-    for (int k = 0; k < 4; k++) {
-        float x = X0 + 3 + k * 4.5f;
-        b.box(Vec3(x, 15, Z1), Vec3(x + 2.6f, 15.3f, Z1 + 0.3f));
-        b.box(Vec3(x, 19.5f, Z1), Vec3(x + 2.6f, 19.8f, Z1 + 0.3f));
+    for (int k = 0; k < 4; k++) {                                         // window frames outside
+        float x = X0 + 4 + k * 5.5f;
+        b.box(Vec3(x, 18, Z1), Vec3(x + 3.2f, 18.3f, Z1 + 0.3f));
+        b.box(Vec3(x, 24.5f, Z1), Vec3(x + 3.2f, 24.8f, Z1 + 0.3f));
     }
     walls = b.build();
 
-    // ---- generator floor with a square hole for the unit --------------------
+    // ---- big windows in the back wall: a bright hall like the video ---------
     b.clear();
-    b.box(Vec3(X0, GEN_FLOOR_Y - 1, Z0 + 1.6f), Vec3(X1, GEN_FLOOR_Y, 56));
-    b.box(Vec3(X0, GEN_FLOOR_Y - 1, 66), Vec3(X1, GEN_FLOOR_Y, Z1 - 1.6f));
-    b.box(Vec3(X0, GEN_FLOOR_Y - 1, 56), Vec3(53, GEN_FLOOR_Y, 66));
-    b.box(Vec3(63, GEN_FLOOR_Y - 1, 56), Vec3(X1, GEN_FLOOR_Y, 66));
-    // columns supporting the floor + pipe saddles
-    b.box(Vec3(X0 + 0.5f, FLOOR_Y, Z0 + 2), Vec3(X0 + 1.5f, GEN_FLOOR_Y - 1, Z0 + 3));
-    b.box(Vec3(X0 + 0.5f, FLOOR_Y, Z1 - 3), Vec3(X0 + 1.5f, GEN_FLOOR_Y - 1, Z1 - 2));
-    for (float z = 52; z < 74; z += 7) b.box(Vec3(55.5f, FLOOR_Y, z), Vec3(60.5f, 5.0f, z + 1.2f));
+    MeshBuilder m;
+    for (int k = 0; k < 8; k++) {
+        float z0 = Z0 + 3.0f + k * 3.9f;
+        b.box(Vec3(X1 - 0.05f, 17.0f, z0), Vec3(X1, 25.5f, z0 + 3.2f));
+        m.box(Vec3(X1 - 0.18f, 17.0f, z0 + 1.55f), Vec3(X1 - 0.02f, 25.5f, z0 + 1.65f));      // mullions
+        m.box(Vec3(X1 - 0.18f, 21.2f, z0), Vec3(X1 - 0.02f, 21.3f, z0 + 3.2f));
+        m.box(Vec3(X1 - 0.2f, 16.8f, z0 - 0.1f), Vec3(X1 - 0.02f, 17.0f, z0 + 3.3f));
+    }
+    windows = b.build();
+    mullions = m.build();
+
+    // ---- generator floor (with an opening for the generator) ----------------
+    b.clear();
+    float hx0 = GX - 5.1f, hx1 = GX + 5.1f, hz0 = GZ - 5.1f, hz1 = GZ + 5.1f;
+    b.box(Vec3(X0, GEN_FLOOR_Y - 1, Z0 + 1.6f), Vec3(X1, GEN_FLOOR_Y, hz0));
+    b.box(Vec3(X0, GEN_FLOOR_Y - 1, hz1), Vec3(X1, GEN_FLOOR_Y, Z1 - 1.6f));
+    b.box(Vec3(X0, GEN_FLOOR_Y - 1, hz0), Vec3(hx0, GEN_FLOOR_Y, hz1));
+    b.box(Vec3(hx1, GEN_FLOOR_Y - 1, hz0), Vec3(X1, GEN_FLOOR_Y, hz1));
+    // columns under the floor
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < 3; j++)
+            b.box(Vec3(X0 + 1.0f + i * 22.0f, PIT_Y, Z0 + 4 + j * 12.0f), Vec3(X0 + 2.2f + i * 22.0f, GEN_FLOOR_Y - 1, Z0 + 5.2f + j * 12.0f));
     floors = b.build();
 
     // cut faces: a low lip where the front wall was sliced
     b.clear();
-    b.box(Vec3(X0 - 0.2f, FLOOR_Y, Z0), Vec3(X0 + 0.6f, FLOOR_Y + 1.0f, Z1));
+    b.box(Vec3(X0 - 0.2f, PIT_Y, Z0), Vec3(X0 + 0.6f, PIT_Y + 0.8f, Z1));
     b.box(Vec3(X0 - 0.2f, ROOF_Y - 0.8f, Z0), Vec3(X0 + 0.6f, ROOF_Y, Z0 + 3.0f));
     cutFaces = b.build();
 
-    // ---- generator ---------------------------------------------------------
-    // stator housing: cylinder with a 120 degree window facing the camera (-x)
+    // ---- yellow railings along the open edge of the floor + stairs ---------
     b.clear();
-    b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y, UNIT.z)));
-    float w0 = PI + radians(60), w1 = PI - radians(60) + 2 * PI;   // keep everything except the -x window
-    b.cylinder(4.6f, 4.6f, 5.2f, 64, false, false, w0 - 2 * PI, w1 - 2 * PI);
-    b.cylinder(4.1f, 4.1f, 5.2f, 64, false, false, w0 - 2 * PI, w1 - 2 * PI);
-    b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y + 5.2f, UNIT.z)));
-    b.annulus(1.2f, 4.6f, 64);
-    b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y, UNIT.z)));
-    b.annulus(3.9f, 4.6f, 64);
-    // cooling vents (ribs) on the outside
-    for (int k = 0; k < 24; k++) {
-        float a = k * 2 * PI / 24;
-        float ad = std::fmod(a - PI + 4 * PI, 2 * PI);
-        if (ad < radians(64) || ad > 2 * PI - radians(64)) continue;      // inside the window
-        b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y, UNIT.z)) * rotateY(-a));
-        b.box(Vec3(4.55f, 0.4f, -0.12f), Vec3(4.9f, 4.8f, 0.12f));
+    for (float z = Z0 + 2; z <= Z1 - 2; z += 1.5f) b.box(Vec3(X0 + 0.3f, GEN_FLOOR_Y, z), Vec3(X0 + 0.4f, GEN_FLOOR_Y + 1.1f, z + 0.08f));
+    b.box(Vec3(X0 + 0.25f, GEN_FLOOR_Y + 1.05f, Z0 + 2), Vec3(X0 + 0.45f, GEN_FLOOR_Y + 1.15f, Z1 - 2));
+    b.box(Vec3(X0 + 0.28f, GEN_FLOOR_Y + 0.55f, Z0 + 2), Vec3(X0 + 0.42f, GEN_FLOOR_Y + 0.62f, Z1 - 2));
+    for (float x = hx0; x <= hx1; x += 1.7f) {                           // around the generator opening
+        b.box(Vec3(x, GEN_FLOOR_Y, hz0 - 0.4f), Vec3(x + 0.08f, GEN_FLOOR_Y + 1.1f, hz0 - 0.32f));
+        b.box(Vec3(x, GEN_FLOOR_Y, hz1 + 0.32f), Vec3(x + 0.08f, GEN_FLOOR_Y + 1.1f, hz1 + 0.4f));
     }
-    b.resetTransform();
-    stator = b.build();
-
-    b.clear();     // top bracket + exciter (blue-grey cap like the video)
-    b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y + 5.2f, UNIT.z)));
-    b.cylinder(3.0f, 2.4f, 1.4f, 48, false, true);
-    b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y + 6.6f, UNIT.z)));
-    b.cylinder(2.2f, 2.2f, 2.0f, 48, false, true);
-    for (int k = 0; k < 6; k++) {                                       // bracket arms
-        float a = k * PI / 3;
-        b.setTransform(translate(Vec3(UNIT.x, GEN_FLOOR_Y + 5.2f, UNIT.z)) * rotateY(a));
-        b.box(Vec3(2.6f, 0, -0.25f), Vec3(4.6f, 0.9f, 0.25f));
+    b.box(Vec3(hx0, GEN_FLOOR_Y + 1.05f, hz0 - 0.42f), Vec3(hx1, GEN_FLOOR_Y + 1.15f, hz0 - 0.3f));
+    b.box(Vec3(hx0, GEN_FLOOR_Y + 1.05f, hz1 + 0.3f), Vec3(hx1, GEN_FLOOR_Y + 1.15f, hz1 + 0.42f));
+    railings = b.build();
+    b.clear();
+    for (int k = 0; k < 18; k++) {
+        float y = PIT_Y + k * (GEN_FLOOR_Y - PIT_Y) / 18.0f;
+        float z = Z1 - 3.0f - k * 0.55f;
+        b.box(Vec3(X0 + 1.0f, PIT_Y, z - 0.55f), Vec3(X0 + 3.0f, y + 0.58f, z));
     }
-    b.resetTransform();
-    statorTop = b.build();
+    stairs = b.build();
 
-    // rotor (copper) and its poles - built around the origin so it can spin
+    // ---- control cabinets with LEDs on the generator floor ------------------
     b.clear();
-    b.cylinder(3.5f, 3.5f, 4.6f, 48, true, true);
-    rotor = b.build();
-    b.clear();
-    for (int k = 0; k < 14; k++) {
-        float a = k * 2 * PI / 14;
-        b.setTransform(rotateY(a));
-        b.box(Vec3(3.4f, 0.15f, -0.45f), Vec3(3.95f, 4.45f, 0.45f));
+    MeshBuilder led;
+    for (int k = 0; k < 6; k++) {
+        float z = Z0 + 3 + k * 1.4f;
+        b.box(Vec3(X1 - 2.6f, GEN_FLOOR_Y, z), Vec3(X1 - 0.6f, GEN_FLOOR_Y + 2.4f, z + 1.2f));
+        led.box(Vec3(X1 - 2.65f, GEN_FLOOR_Y + 1.6f, z + 0.2f), Vec3(X1 - 2.6f, GEN_FLOOR_Y + 1.75f, z + 0.5f));
+        led.box(Vec3(X1 - 2.65f, GEN_FLOOR_Y + 1.2f, z + 0.6f), Vec3(X1 - 2.6f, GEN_FLOOR_Y + 1.3f, z + 1.0f));
     }
-    b.resetTransform();
-    poles = b.build();
+    cabinets = b.build();
+    leds = led.build();
 
-    // shaft from the turbine up to the generator
+    // ---- overhead crane (yellow) and ceiling lights -------------------------
     b.clear();
-    b.cylinder(0.45f, 0.45f, GEN_FLOOR_Y + 0.4f - UNIT.y, 20, true, true);
-    for (int k = 0; k < 4; k++) {                                       // coupling flanges
-        b.setTransform(translate(Vec3(0, 2.0f + k * 1.2f, 0)));
-        b.cylinder(0.75f, 0.75f, 0.25f, 20, true, true);
+    b.box(Vec3(X0 + 6, 24.2f, Z0 + 1.6f), Vec3(X0 + 7, 24.8f, Z1 - 1.6f));
+    b.box(Vec3(X1 - 1, 24.2f, Z0 + 1.6f), Vec3(X1, 24.8f, Z1 - 1.6f));
+    b.box(Vec3(X0 + 6, 24.8f, 50.5f), Vec3(X1, 25.8f, 52.0f));
+    b.box(Vec3(X0 + 6, 24.8f, 53.0f), Vec3(X1, 25.8f, 54.5f));
+    b.box(Vec3(60, 25.8f, 50.2f), Vec3(64, 26.8f, 54.8f));
+    crane = b.build();
+    b.clear();
+    for (int k = 0; k < 4; k++) b.box(Vec3(54 + k * 4.5f, ROOF_Y - 0.2f, 50), Vec3(55.5f + k * 4.5f, ROOF_Y, 76));
+    lights = b.build();
+
+    // ---- shaft (turns) from the runner up to the generator rotor ------------
+    b.clear();
+    b.setTransform(translate(Vec3(0, TurbineDims::CENTRE.y + 0.9f, 0)));
+    b.cylinder(0.42f, 0.42f, 14.5f - (TurbineDims::CENTRE.y + 0.9f), 24, true, true);
+    b.setTransform(translate(Vec3(0, 10.4f, 0)));
+    b.cylinder(0.85f, 0.85f, 0.35f, 32, true, true);                   // coupling flange
+    for (int k = 0; k < 12; k++) {
+        float a = k * 2 * PI / 12;
+        b.setTransform(translate(Vec3(std::cos(a) * 0.68f, 10.3f, std::sin(a) * 0.68f)));
+        b.cylinder(0.06f, 0.06f, 0.55f, 6, true, true);
+    }
+    for (int k = 0; k < 4; k++) {                                       // marks so you can see it turn
+        b.setTransform(rotateY(k * PI * 0.5f));
+        b.box(Vec3(0.41f, 8.2f, -0.05f), Vec3(0.44f, 9.8f, 0.05f));
+        b.box(Vec3(0.41f, 11.2f, -0.05f), Vec3(0.44f, 12.6f, 0.05f));
     }
     b.resetTransform();
     shaft = b.build();
 
-    // ---- bulb turbine inside the pipe (axis = +z) --------------------------
+    // bearings (fixed): turbine guide bearing + bracket under the generator
     b.clear();
-    b.setTransform(rotateX(PI * 0.5f));                                   // local +Y -> world +z
-    b.cylinder(0.25f, 0.95f, 1.6f, 32, false, false);                     // nose cone
-    b.setTransform(rotateX(PI * 0.5f) * translate(Vec3(0, 1.6f, 0)));
-    b.cylinder(0.95f, 0.95f, 2.4f, 32, false, false);
-    b.setTransform(rotateX(PI * 0.5f) * translate(Vec3(0, 4.0f, 0)));
-    b.cylinder(0.95f, 0.3f, 1.4f, 32, false, true);
-    b.setTransform(translate(Vec3(0, 0, 0)));
-    b.sphere(0.26f, 16, 8);
-    b.resetTransform();
-    bulb = b.build();
-
-    b.clear();       // runner blades around the z axis
-    for (int k = 0; k < 5; k++) {
-        float a = k * 2 * PI / 5;
-        b.setTransform(rotateZ(a) * rotateY(0.5f));
-        b.box(Vec3(-0.08f, 0.85f, -0.5f), Vec3(0.08f, 1.7f, 0.5f));
-    }
-    b.resetTransform();
-    blades = b.build();
-
-    // ---- equipment on the generator floor -----------------------------------
-    b.clear();
-    MeshBuilder led;
+    b.setTransform(translate(Vec3(GX, 7.6f, GZ)));
+    b.cylinder(1.05f, 1.05f, 0.9f, 32, true, true);
     for (int k = 0; k < 4; k++) {
-        float z = 51 + k * 1.4f;
-        b.box(Vec3(64.5f, GEN_FLOOR_Y, z), Vec3(66.5f, GEN_FLOOR_Y + 2.4f, z + 1.2f));
-        led.box(Vec3(64.45f, GEN_FLOOR_Y + 1.6f, z + 0.2f), Vec3(64.5f, GEN_FLOOR_Y + 1.75f, z + 0.5f));
-        led.box(Vec3(64.45f, GEN_FLOOR_Y + 1.2f, z + 0.6f), Vec3(64.5f, GEN_FLOOR_Y + 1.3f, z + 1.0f));
+        b.setTransform(translate(Vec3(GX, 7.6f, GZ)) * rotateY(k * PI * 0.5f + PI * 0.25f));
+        b.box(Vec3(1.0f, 0.2f, -0.12f), Vec3(2.4f, 0.6f, 0.12f));
     }
-    b.box(Vec3(50, GEN_FLOOR_Y, 50.5f), Vec3(51.5f, GEN_FLOOR_Y + 1.8f, 53));
-    b.box(Vec3(50, GEN_FLOOR_Y, 53.4f), Vec3(51.5f, GEN_FLOOR_Y + 1.8f, 55.4f));
-    // railings around the floor hole
-    for (float z = 56; z <= 66; z += 1.25f) b.box(Vec3(52.9f, GEN_FLOOR_Y, z), Vec3(53.0f, GEN_FLOOR_Y + 1.1f, z + 0.08f));
-    b.box(Vec3(52.85f, GEN_FLOOR_Y + 1.05f, 56), Vec3(53.05f, GEN_FLOOR_Y + 1.15f, 66));
-    cabinets = b.build();
-    leds = led.build();
-
-    // big cooling motor / exciter transformer (round, blue-grey) next to the unit
-    b.clear();
-    b.setTransform(translate(Vec3(60.5f, GEN_FLOOR_Y + 2.0f, 69.0f)) * rotateX(PI * 0.5f));
-    b.cylinder(1.8f, 1.8f, 3.2f, 40, true, true);
-    for (int k = 0; k < 10; k++) {
-        b.setTransform(translate(Vec3(60.5f, GEN_FLOOR_Y + 2.0f, 69.2f + k * 0.3f)) * rotateX(PI * 0.5f));
-        b.cylinder(1.95f, 1.95f, 0.1f, 40, false, false);
+    b.setTransform(translate(Vec3(GX, 12.3f, GZ)));
+    b.cylinder(1.2f, 1.2f, 0.9f, 32, true, true);
+    for (int k = 0; k < 6; k++) {
+        b.setTransform(translate(Vec3(GX, 12.3f, GZ)) * rotateY(k * PI / 3));
+        b.box(Vec3(1.1f, 0.25f, -0.15f), Vec3(5.1f, 0.75f, 0.15f));
     }
     b.resetTransform();
-    b.box(Vec3(58.9f, GEN_FLOOR_Y, 68.6f), Vec3(62.1f, GEN_FLOOR_Y + 0.4f, 72.6f));
-    motor = b.build();
+    bearings = b.build();
 
-    // overhead crane
+    // draft-tube outlet into the tailrace
     b.clear();
-    b.box(Vec3(X0 + 6, 21.2f, Z0 + 1.6f), Vec3(X0 + 7, 21.8f, Z1 - 1.6f));
-    b.box(Vec3(X1 - 1, 21.2f, Z0 + 1.6f), Vec3(X1, 21.8f, Z1 - 1.6f));
-    b.box(Vec3(X0 + 6, 21.8f, 59.5f), Vec3(X1, 22.8f, 61.0f));
-    b.box(Vec3(X0 + 6, 21.8f, 62.0f), Vec3(X1, 22.8f, 63.5f));
-    b.box(Vec3(56, 22.8f, 59.2f), Vec3(60, 23.8f, 63.8f));
-    crane = b.build();
-
-    b.clear();
-    for (int k = 0; k < 3; k++) b.box(Vec3(54 + k * 5.0f, ROOF_Y - 0.2f, 52), Vec3(55.5f + k * 5.0f, ROOF_Y, 70));
-    lights = b.build();
+    b.box(Vec3(GX - 3.5f, -6, Z1), Vec3(GX - 2.5f, 3.2f, Z1 + 5));
+    b.box(Vec3(GX + 2.5f, -6, Z1), Vec3(GX + 3.5f, 3.2f, Z1 + 5));
+    outlet = b.build();
 }
 
-void Powerhouse::draw(Renderer& r, float rotorAngle) {
+void Powerhouse::draw(Renderer& r, float shaftAngle) {
     Mat4 I;
-    r.drawMesh(walls, I, Mat::concrete(1.0f, Vec3(0.64f, 0.64f, 0.62f)));
-    r.drawMesh(floors, I, Mat::concrete(1.5f, Vec3(0.55f, 0.55f, 0.53f)));
+    r.drawMesh(foundation, I, Mat::concrete(1.5f, Vec3(0.5f, 0.5f, 0.49f)));
+    r.drawMesh(walls, I, Mat::concrete(1.0f, Vec3(0.62f, 0.62f, 0.6f)));
+    r.drawMesh(windows, I, Mat::glow(Vec3(1.5f, 1.65f, 1.8f)));
+    r.drawMesh(mullions, I, Mat::paint(Vec3(0.3f, 0.32f, 0.35f)));
+    r.drawMesh(floors, I, Mat::concrete(1.5f, Vec3(0.56f, 0.56f, 0.55f)));
     r.drawMesh(cutFaces, I, Mat::concrete(1.0f, Vec3(0.5f, 0.5f, 0.48f)));
-    r.drawMesh(stator, I, Mat::paint(Vec3(0.42f, 0.5f, 0.56f), 0.5f));
-    r.drawMesh(statorTop, I, Mat::paint(Vec3(0.45f, 0.58f, 0.66f), 0.6f));
-
-    // TRANSFORMATIONS: the rotor, shaft and turbine runner all spin together
-    Mat4 rotorM = translate(Vec3(UNIT.x, GEN_FLOOR_Y + 0.3f, UNIT.z)) * rotateY(rotorAngle);
-    r.drawMesh(rotor, rotorM, Mat::copper());
-    r.drawMesh(poles, rotorM, Mat::paint(Vec3(0.55f, 0.18f, 0.12f), 0.7f));
-    r.drawMesh(shaft, translate(UNIT) * rotateY(rotorAngle), Mat::steel());
-    r.drawMesh(bulb, translate(Vec3(UNIT.x, UNIT.y, UNIT.z - 2.6f)), Mat::steel(Vec3(0.75f, 0.76f, 0.78f)));
-    r.drawMesh(blades, translate(Vec3(UNIT.x, UNIT.y, UNIT.z + 1.0f)) * rotateZ(rotorAngle * 1.0f), Mat::steel(Vec3(0.7f, 0.68f, 0.6f)));
-
+    r.drawMesh(railings, I, Mat::paint(Vec3(0.85f, 0.65f, 0.08f), 0.5f));
+    r.drawMesh(stairs, I, Mat::concrete(2.0f, Vec3(0.5f, 0.5f, 0.5f)));
     r.drawMesh(cabinets, I, Mat::paint(Vec3(0.5f, 0.52f, 0.54f)));
     r.drawMesh(leds, I, Mat::glow(Vec3(0.2f, 3.0f, 0.8f)));
-    r.drawMesh(motor, I, Mat::paint(Vec3(0.35f, 0.47f, 0.55f), 0.6f));
-    r.drawMesh(crane, I, Mat::paint(Vec3(0.8f, 0.6f, 0.08f)));
+    r.drawMesh(crane, I, Mat::paint(Vec3(0.85f, 0.62f, 0.08f)));
     r.drawMesh(lights, I, Mat::glow(Vec3(5.0f, 4.6f, 3.8f)));
+    r.drawMesh(outlet, I, Mat::concrete(1.0f));
+    // TRANSFORMATION: the shaft turns with the runner and the generator rotor
+    Mat4 sm = translate(Vec3(TurbineDims::CENTRE.x, 0, TurbineDims::CENTRE.z)) * rotateY(shaftAngle);
+    r.drawMesh(shaft, sm, Mat::steel(Vec3(0.7f, 0.72f, 0.75f)));
+    r.drawMesh(bearings, I, Mat::paint(Vec3(0.3f, 0.42f, 0.55f), 0.5f));
     penstock.drawShell(r, Mat::steel(Vec3(0.42f, 0.44f, 0.47f)));
 }

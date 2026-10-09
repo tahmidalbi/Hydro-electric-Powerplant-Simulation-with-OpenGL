@@ -137,7 +137,7 @@ void Debris::spawnWave(int wave) {
         }
         pieces.push_back(p);
     };
-    float x0 = -24.0f - wave * 1.5f;
+    float x0 = -16.0f - wave * 1.5f;
     if (wave == 0) {
         add(DEB_BRANCH, x0 + 2.0f, 1.0f);
         add(DEB_STRAW, x0 + 1.0f, 0.5f);
@@ -149,24 +149,14 @@ void Debris::spawnWave(int wave) {
     for (int i = 0; i < 4; i++) add(DEB_PLASTIC, x0 - rng.range(0, 9), rng.range(-4.0f, 4.0f));
 }
 
-void Debris::rakeClean() {
-    for (DebrisPiece& p : pieces) if (p.stuck) p.raking = true;
-    stuckSlots = 0;
-}
-
 int Debris::stuckCount() const {
     int n = 0;
-    for (const DebrisPiece& p : pieces) if (p.stuck && !p.raking) n++;
+    for (const DebrisPiece& p : pieces) if (p.stuck) n++;
     return n;
 }
 
 void Debris::update(float dt, float time, ParticleSystem& splash) {
     for (DebrisPiece& p : pieces) {
-        if (p.raking) {                         // lifted out of the water by the rake
-            p.pos.y += dt * 3.5f;
-            p.pos.x -= dt * 0.6f;
-            continue;
-        }
         if (!p.stuck) {
             // current + buoyancy + bobbing
             float target = p.floatY + 0.12f * std::sin(time * 1.6f + p.phase);
@@ -197,6 +187,8 @@ void Debris::update(float dt, float time, ParticleSystem& splash) {
                     s.gravity = -9.81f;
                     s.color = Vec3(0.9f, 0.95f, 1.0f);
                     s.alpha = 0.9f;
+                    s.pos = parent.transformPoint(s.pos);       // into world space
+                    s.vel = parent.transformDir(s.vel);
                     splash.emit(s);
                 }
             }
@@ -205,6 +197,7 @@ void Debris::update(float dt, float time, ParticleSystem& splash) {
                 p.vel.z += rng.range(-1.0f, 1.0f) * dt * 4.0f;
             }
             if (p.passes && p.pos.x > rackX + 0.7f && p.pos.x - p.vel.x * dt <= rackX + 0.7f) passed++;
+            if (p.passes && p.pos.x > rackX + 0.5f && sinkY > -1e8f) p.floatY = sinkY;   // drawn down into the intake
         } else {
             // resting against the rack: ease into the final pose, tremble in the current
             p.stuckTime += dt;
@@ -216,12 +209,12 @@ void Debris::update(float dt, float time, ParticleSystem& splash) {
     }
     // forget pieces that left the picture
     for (size_t i = 0; i < pieces.size();)
-        if (pieces[i].pos.x > 48 || pieces[i].pos.y > 16) pieces.erase(pieces.begin() + i); else i++;
+        if (pieces[i].pos.x > endX) pieces.erase(pieces.begin() + i); else i++;
 }
 
 void Debris::draw(Renderer& r) {
     for (const DebrisPiece& p : pieces) {
-        Mat4 m = translate(p.pos) * rotateY(p.rot.y) * rotateZ(p.rot.z) * rotateX(p.rot.x) * scale(Vec3(p.scale));
+        Mat4 m = parent * translate(p.pos) * rotateY(p.rot.y) * rotateZ(p.rot.z) * rotateX(p.rot.x) * scale(Vec3(p.scale));
         Material mat;
         mat.color = p.color;
         mat.specular = 0.15f;

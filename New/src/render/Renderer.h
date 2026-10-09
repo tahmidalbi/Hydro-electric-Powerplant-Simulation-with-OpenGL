@@ -19,7 +19,8 @@
 enum Pattern {
     PAT_NONE = 0, PAT_CONCRETE = 1, PAT_STEEL = 2, PAT_PAINT = 3, PAT_BARK = 4,
     PAT_TERRAIN = 5, PAT_SOIL = 6, PAT_TILES = 7, PAT_GRATING = 8, PAT_COPPER = 9,
-    PAT_HOLO = 10, PAT_LEAF = 11, PAT_BEAM = 12, PAT_ROCK = 13, PAT_PLASTIC = 14
+    PAT_HOLO = 10, PAT_LEAF = 11, PAT_BEAM = 12, PAT_ROCK = 13, PAT_PLASTIC = 14,
+    PAT_FLOW = 15     // glowing flow line: bright pulses travel along uv.y
 };
 
 struct Material {
@@ -35,6 +36,8 @@ struct Material {
     bool  twoSided = false;     // thin sheets (leaves, plastic, plates)
     bool  additive = false;     // light shafts / glows
     bool  castShadow = true;
+    float flowSpeed = 0.0f;     // PAT_FLOW: how fast the pulses travel (m/s)
+    float flowFront = 1e5f;     // PAT_FLOW: only uv.y below this glows (a front that grows)
 };
 
 struct WaterStyle {

@@ -15,6 +15,8 @@ uniform float uReflect;
 uniform vec3  uEmissive;
 uniform float uAlpha;
 uniform int   uTwoSided;
+uniform float uFlowRate;
+uniform float uFlowFront;
 
 #define PAT_NONE     0
 #define PAT_CONCRETE 1
@@ -31,6 +33,7 @@ uniform int   uTwoSided;
 #define PAT_BEAM     12
 #define PAT_ROCK     13
 #define PAT_PLASTIC  14
+#define PAT_FLOW     15
 
 // Choose the 2 world axes that lie in the surface (cheap "tri-planar" mapping).
 vec2 planarUV(vec3 wp, vec3 n) {
@@ -97,6 +100,12 @@ vec3 surfaceAlbedo(vec3 wp, vec3 n, vec2 uv, inout float spec, inout float shin,
         vec3 dirt = vec3(0.24, 0.21, 0.16) * (0.8 + 0.4 * nn);
         float flat_ = smoothstep(0.62, 0.86, n.y + (nn - 0.5) * 0.35);
         c = mix(rock, mix(dirt, grass, smoothstep(0.35, 0.6, nn)), flat_);
+        // reservoir bed (inside the reservoir area, below the water line): grey-brown silt
+        if (wp.y < uWaterLevel - 0.5 && wp.x > uCausticRect.x && wp.z > uCausticRect.y &&
+            wp.x < uCausticRect.z && wp.z < uCausticRect.w) {
+            vec3 silt = vec3(0.23, 0.22, 0.19) * (0.7 + 0.6 * fbm2(wp.xz * 0.08));
+            c = mix(c, silt, 0.85);
+        }
         spec *= 0.4;
     }
     else if (uPattern == PAT_SOIL) {
@@ -155,6 +164,16 @@ vec3 surfaceAlbedo(vec3 wp, vec3 n, vec2 uv, inout float spec, inout float shin,
     }
     else if (uPattern == PAT_PLASTIC) {
         c *= 0.85 + 0.2 * vnoise2(uv * 12.0 * sc);
+    }
+    else if (uPattern == PAT_FLOW) {
+        // glowing flow line (water streamlines, magnetic field, electric current):
+        // bright pulses run along the line; a growing front can reveal it
+        if (uv.y > uFlowFront) discard;
+        float f = fract(uv.y * sc - uTime * uFlowRate * sc);
+        float pulse = smoothstep(0.0, 0.08, f) * (1.0 - smoothstep(0.08, 0.6, f));
+        float tip = uFlowFront < 1e4 ? 1.0 - smoothstep(0.0, 2.5, uFlowFront - uv.y) : 0.0;
+        emis = uEmissive * (0.35 + 1.6 * pulse + 2.5 * tip);
+        alpha = uAlpha * (0.4 + 0.6 * pulse + tip);
     }
     return c;
 }

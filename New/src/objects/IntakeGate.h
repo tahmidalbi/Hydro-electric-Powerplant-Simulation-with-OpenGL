@@ -1,22 +1,27 @@
 // =============================================================================
-//  IntakeGate.h  -  the steel vertical-lift gate that opens the way from the
-//  reservoir into the penstock, lifted by hydraulic cylinders.
+//  IntakeGate.h  -  the steel vertical-lift gate inside the dam that opens
+//  the conduit, lifted by hydraulic cylinders standing on the dam crest.
+//
+//  Local frame: the water flows along +z, the gate leaf lies in the plane
+//  z = 0, its width runs along x (centred on 0), its bottom is at y = 0.
 //
 //  HIERARCHICAL TRANSFORMATION: the gate leaf moves up by 'lift' metres; the
-//  piston rods are attached to the gate, so they move with it and slide into
-//  the fixed cylinders above.
+//  piston rods are attached to the leaf, so they use the same matrix and
+//  slide into the fixed cylinders above.
 // =============================================================================
 #pragma once
 #include "../render/Renderer.h"
 
 class IntakeGate {
 public:
-    float height = 10.0f;       // gate leaf height (m)
-    float maxLift = 9.0f;       // how far it can rise
+    float width = 11.0f;        // conduit width
+    float height = 10.0f;       // conduit height = gate leaf height
+    float crestAbove = 29.2f;   // dam crest height above the conduit floor
+    float maxLift = 10.6f;      // how far the gate rises into its shaft
 
     void build();
-    void draw(Renderer& r, float lift);   // lift in metres
+    void draw(Renderer& r, const Mat4& base, float lift);
 
 private:
-    Mesh leaf, guides, cylinders, rods, deck, grating, gratingFrame;
+    Mesh leaf, rods, guides, cylinders, frame, ladder, ladderFrame;
 };

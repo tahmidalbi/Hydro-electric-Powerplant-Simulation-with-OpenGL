@@ -1,98 +1,102 @@
 #include "IntakeGate.h"
 #include "Materials.h"
 
-// Gate plane is x = 0 (water flows towards +x), channel z = -7 .. 7.
 void IntakeGate::build() {
+    const float hw = width * 0.5f - 0.1f;
     MeshBuilder b;
-    // ---- gate leaf: skin plate + horizontal girders + stiffeners -----------
-    b.box(Vec3(-0.35f, 0, -6.8f), Vec3(0.05f, height, 6.8f));
+    // ---- gate leaf: skin plate (upstream side) + girders (downstream side) --
+    b.box(Vec3(-hw, 0, -0.4f), Vec3(hw, height, 0.0f));
     for (int k = 0; k < 5; k++) {
         float y = 0.6f + k * (height - 1.2f) / 4.0f;
-        b.box(Vec3(0.05f, y - 0.22f, -6.7f), Vec3(0.75f, y + 0.22f, 6.7f));        // web
-        b.box(Vec3(0.65f, y - 0.4f, -6.7f), Vec3(0.8f, y + 0.4f, 6.7f));           // flange
+        b.box(Vec3(-hw + 0.1f, y - 0.22f, 0.0f), Vec3(hw - 0.1f, y + 0.22f, 0.7f));     // web
+        b.box(Vec3(-hw + 0.1f, y - 0.4f, 0.6f), Vec3(hw - 0.1f, y + 0.4f, 0.78f));      // flange
     }
-    for (int k = 0; k < 5; k++) {
-        float z = -6.6f + k * 13.2f / 4.0f;
-        b.box(Vec3(0.05f, 0.1f, z - 0.12f), Vec3(0.7f, height - 0.1f, z + 0.12f));
+    for (int k = 0; k < 5; k++) {                                                        // stiffeners
+        float x = -hw + 0.2f + k * (2.0f * hw - 0.4f) / 4.0f;
+        b.box(Vec3(x - 0.12f, 0.1f, 0.0f), Vec3(x + 0.12f, height - 0.1f, 0.65f));
     }
-    b.box(Vec3(-0.4f, height - 0.3f, -6.9f), Vec3(0.85f, height, 6.9f));             // top beam
-    b.box(Vec3(-0.4f, 0, -6.9f), Vec3(0.85f, 0.25f, 6.9f));                          // bottom seal beam
-    for (int i = -1; i <= 1; i++)                                                    // rod clevises
-        b.box(Vec3(-0.3f, height, i * 4.5f - 0.35f), Vec3(0.5f, height + 0.6f, i * 4.5f + 0.35f));
+    b.box(Vec3(-hw - 0.05f, height - 0.3f, -0.45f), Vec3(hw + 0.05f, height, 0.85f));     // top beam
+    b.box(Vec3(-hw - 0.05f, 0, -0.45f), Vec3(hw + 0.05f, 0.25f, 0.85f));                  // bottom seal
+    for (int i = -1; i <= 1; i += 2)                                                     // rod clevises
+        b.box(Vec3(i * 3.0f - 0.35f, height, -0.3f), Vec3(i * 3.0f + 0.35f, height + 0.6f, 0.5f));
     leaf = b.build();
 
-    // ---- guide frame on both sides + front post ----------------------------
+    // ---- piston rods: from the gate top up into the cylinders --------------
     b.clear();
-    for (int side = -1; side <= -1; side += 2) {     // back guide only (front one would hide the gate)
-        float z = side * 7.4f;
-        b.box(Vec3(-0.9f, -1, z - 0.6f), Vec3(1.3f, 21.0f, z + 0.6f));
+    for (int i = -1; i <= 1; i += 2) {
+        b.setTransform(translate(Vec3(i * 3.0f, height + 0.6f, 0.1f)));
+        b.cylinder(0.2f, 0.2f, 20.0f, 16, false, true);
+    }
+    rods = b.build();
+
+    // ---- steel guide rails along both walls of the shaft --------------------
+    b.clear();
+    for (int i = -1; i <= 1; i += 2) {
+        float x = i * (width * 0.5f - 0.15f);
+        b.box(Vec3(x - 0.15f, 0, -0.6f), Vec3(x + 0.15f, crestAbove, -0.45f));
+        b.box(Vec3(x - 0.15f, 0, 0.9f), Vec3(x + 0.15f, crestAbove, 1.05f));
     }
     guides = b.build();
 
-    // ---- hoist deck with three hydraulic cylinders --------------------------
+    // ---- hydraulic cylinders standing on a steel portal on the crest --------
     b.clear();
-    b.box(Vec3(-3.5f, 21.0f, -9), Vec3(3.5f, 22.4f, 8.2f));
-    for (float z = -8.5f; z <= 8.0f; z += 1.4f) b.box(Vec3(3.3f, 22.4f, z), Vec3(3.4f, 23.5f, z + 0.08f));
-    b.box(Vec3(3.28f, 23.4f, -8.5f), Vec3(3.42f, 23.5f, 8.0f));
-    deck = b.build();
-    b.clear();
-    for (int i = -1; i <= 1; i++) {
-        b.setTransform(translate(Vec3(0.2f, 22.4f, i * 4.5f)));
-        b.cylinder(0.55f, 0.55f, 10.0f, 24, false, true);                    // barrel (longer than the stroke)
-        b.setTransform(translate(Vec3(0.2f, 22.4f, i * 4.5f)));
+    for (int i = -1; i <= 1; i += 2) {
+        b.setTransform(translate(Vec3(i * 3.0f, crestAbove, 0.1f)));
+        b.cylinder(0.55f, 0.55f, 11.5f, 24, false, true);                    // barrel (longer than the stroke)
+        b.setTransform(translate(Vec3(i * 3.0f, crestAbove, 0.1f)));
         b.cylinder(0.8f, 0.8f, 0.4f, 24, true, true);                        // base flange
-        b.setTransform(translate(Vec3(0.2f, 32.4f, i * 4.5f)));
+        b.setTransform(translate(Vec3(i * 3.0f, crestAbove + 11.5f, 0.1f)));
         b.cylinder(0.75f, 0.75f, 0.45f, 24, true, true);                     // head
         b.resetTransform();
-        b.box(Vec3(0.6f, 23.5f, i * 4.5f - 0.1f), Vec3(1.0f, 31.0f, i * 4.5f + 0.1f));   // hose
-    }
-    cylinders = b.build();
-    b.clear();
-    for (int i = -1; i <= 1; i++) {      // rods hang from the gate top up into the barrels
-        b.setTransform(translate(Vec3(0.1f, height + 0.6f, i * 4.5f)));
-        b.cylinder(0.2f, 0.2f, 12.0f, 16, false, true);
+        b.box(Vec3(i * 3.0f + 0.5f, crestAbove + 0.6f, -0.05f), Vec3(i * 3.0f + 0.75f, crestAbove + 11.0f, 0.2f));   // hose
     }
     b.resetTransform();
-    rods = b.build();
+    cylinders = b.build();
+    b.clear();
+    b.box(Vec3(-width * 0.5f, crestAbove, -1.2f), Vec3(width * 0.5f, crestAbove + 0.5f, 1.4f));     // plate over the shaft
+    for (int i = -1; i <= 1; i += 2)
+        b.box(Vec3(i * 5.0f - 0.3f, crestAbove + 0.5f, -0.3f), Vec3(i * 5.0f + 0.3f, crestAbove + 12.5f, 0.5f));
+    b.box(Vec3(-5.3f, crestAbove + 12.0f, -0.3f), Vec3(5.3f, crestAbove + 12.6f, 0.5f));
+    frame = b.build();
 
-    // ---- wire-mesh screen on the reservoir side (the "ladder" in the video) -
+    // ---- wire-mesh screen on the far wall, just upstream of the gate --------
+    // (the diamond-mesh panel standing beside the gate in the video)
     b.clear();
     {
-        Vec3 a(-4.2f, 0, 7.2f), c(-1.0f, 0, 7.2f), d(-1.0f, 19.0f, 7.2f), e(-2.0f, 19.0f, 7.2f);
+        float x = width * 0.5f - 0.05f, z0 = -3.3f, z1 = -1.0f;
         unsigned int k = (unsigned int)b.verts.size();
-        Vec3 n(0, 0, 1);
-        b.addVertex(a, n, Vec2(a.x, a.y));
-        b.addVertex(c, n, Vec2(c.x, c.y));
-        b.addVertex(d, n, Vec2(d.x, d.y));
-        b.addVertex(e, n, Vec2(e.x, e.y));
+        Vec3 n(-1, 0, 0);
+        b.addVertex(Vec3(x, 0, z0), n, Vec2(z0, 0));
+        b.addVertex(Vec3(x, 0, z1), n, Vec2(z1, 0));
+        b.addVertex(Vec3(x, height, z1), n, Vec2(z1, height));
+        b.addVertex(Vec3(x, height, z0), n, Vec2(z0, height));
         b.tri(k, k + 1, k + 2);
         b.tri(k, k + 2, k + 3);
     }
-    grating = b.build();
+    ladder = b.build();
     b.clear();
-    b.beam(Vec3(-4.2f, 0, 7.2f), Vec3(-2.0f, 19.0f, 7.2f), 0.18f, 0.18f);
-    b.beam(Vec3(-1.0f, 0, 7.2f), Vec3(-1.0f, 19.0f, 7.2f), 0.22f, 0.22f);
-    for (float y = 0.2f; y < 19.0f; y += 2.4f) {
-        float x0 = mixf(-4.2f, -2.0f, y / 19.0f);
-        b.beam(Vec3(x0, y, 7.2f), Vec3(-1.0f, y, 7.2f), 0.12f, 0.12f);
+    {
+        float x = width * 0.5f - 0.12f;
+        b.beam(Vec3(x, 0, -3.3f), Vec3(x, height, -3.3f), 0.15f, 0.15f);
+        b.beam(Vec3(x, 0, -1.0f), Vec3(x, height, -1.0f), 0.15f, 0.15f);
+        for (float y = 0.8f; y < height; y += 2.2f) b.beam(Vec3(x, y, -3.3f), Vec3(x, y, -1.0f), 0.1f, 0.1f);
     }
-    gratingFrame = b.build();
+    ladderFrame = b.build();
 }
 
-void IntakeGate::draw(Renderer& r, float lift) {
-    Mat4 I;
+void IntakeGate::draw(Renderer& r, const Mat4& base, float lift) {
     Material gateMat = Mat::paint(Vec3(0.3f, 0.32f, 0.34f), 0.55f);
     gateMat.reflect = 0.1f;
-    Mat4 up = translate(Vec3(0, lift, 0));         // the moving part
+    Mat4 up = base * translate(Vec3(0, lift, 0));          // the moving part
     r.drawMesh(leaf, up, gateMat);
     r.drawMesh(rods, up, Mat::steel(Vec3(0.8f, 0.82f, 0.85f)));   // rods move WITH the gate
-    r.drawMesh(guides, I, Mat::paint(Vec3(0.22f, 0.23f, 0.25f)));
-    r.drawMesh(cylinders, I, Mat::paint(Vec3(0.55f, 0.57f, 0.6f), 0.7f));
-    r.drawMesh(deck, I, Mat::darkConcrete(1.5f));
+    r.drawMesh(guides, base, Mat::paint(Vec3(0.22f, 0.23f, 0.25f)));
+    r.drawMesh(cylinders, base, Mat::paint(Vec3(0.55f, 0.57f, 0.6f), 0.7f));
+    r.drawMesh(frame, base, Mat::paint(Vec3(0.25f, 0.27f, 0.3f)));
     Material mesh = Mat::steel(Vec3(0.5f, 0.52f, 0.55f));
     mesh.pattern = PAT_GRATING;
     mesh.patternScale = 4.0f;
     mesh.twoSided = true;
-    r.drawMesh(grating, I, mesh);
-    r.drawMesh(gratingFrame, I, Mat::steel(Vec3(0.45f, 0.47f, 0.5f)));
+    r.drawMesh(ladder, base, mesh);
+    r.drawMesh(ladderFrame, base, Mat::steel(Vec3(0.45f, 0.47f, 0.5f)));
 }

@@ -161,6 +161,8 @@ void Renderer::drawMesh(const Mesh& m, const Mat4& model, const Material& mat) {
     s.set("uEmissive", mat.emissive);
     s.set("uAlpha", mat.alpha);
     s.set("uTwoSided", mat.twoSided ? 1 : 0);
+    s.set("uFlowRate", mat.flowSpeed);
+    s.set("uFlowFront", mat.flowFront);
 
     bool blended = mat.alpha < 0.999f || mat.additive;
     if (blended) {

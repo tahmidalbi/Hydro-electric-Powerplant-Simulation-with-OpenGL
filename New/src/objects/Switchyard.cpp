@@ -1,6 +1,8 @@
 #include "Switchyard.h"
 #include "Materials.h"
 
+using namespace YardDims;
+
 void Switchyard::latticeTower(MeshBuilder& b, const Vec3& base, float bh, float th, float h, int levels) {
     auto corner = [&](int k, float y) {
         float half = mixf(bh, th, y / h);
@@ -13,87 +15,153 @@ void Switchyard::latticeTower(MeshBuilder& b, const Vec3& base, float bh, float 
         float y0 = h * l / levels, y1 = h * (l + 1) / levels;
         for (int k = 0; k < 4; k++) {
             int n = (k + 1) % 4;
-            b.beam(corner(k, y1), corner(n, y1), t, t);          // horizontal
-            b.beam(corner(k, y0), corner(n, y1), t * 0.7f, t * 0.7f);   // X bracing
+            b.beam(corner(k, y1), corner(n, y1), t, t);                // horizontal
+            b.beam(corner(k, y0), corner(n, y1), t * 0.7f, t * 0.7f);  // X bracing
             b.beam(corner(n, y0), corner(k, y1), t * 0.7f, t * 0.7f);
         }
     }
 }
 
-void Switchyard::build() {
-    MeshBuilder b;
-    b.box(Vec3(72, -3, 44), Vec3(116, 5, 96));          // raised platform
-    platform = b.build();
-
-    // gantry towers + beams, and two big transmission pylons
-    b.clear();
-    Vec3 towers[4] = {Vec3(80, 5, 54), Vec3(80, 5, 70), Vec3(100, 5, 54), Vec3(100, 5, 70)};
-    for (Vec3 p : towers) latticeTower(b, p, 1.3f, 0.7f, 16.0f, 6);
-    b.beam(Vec3(80, 20.5f, 54), Vec3(80, 20.5f, 70), 0.9f, 0.9f);
-    b.beam(Vec3(100, 20.5f, 54), Vec3(100, 20.5f, 70), 0.9f, 0.9f);
-    Vec3 pylons[2] = {Vec3(110, 5, 85), Vec3(140, 40, 120)};
-    for (Vec3 p : pylons) {
-        latticeTower(b, p, 3.0f, 0.9f, 34.0f, 9);
-        for (int k = 0; k < 3; k++) {
-            float y = p.y + 22 + k * 5.0f;
-            b.beam(p + Vec3(-7, y - p.y, 0), p + Vec3(7, y - p.y, 0), 0.35f, 0.35f);
-        }
+// a stack of porcelain sheds (brown insulator) from y0 upwards
+static void insulator(MeshBuilder& b, const Vec3& p, float height, float radius) {
+    int n = (int)(height / 0.22f);
+    for (int d = 0; d < n; d++) {
+        b.setTransform(translate(p + Vec3(0, d * 0.22f, 0)));
+        b.cylinder(radius, radius * 0.6f, 0.2f, 14, true, true);
     }
-    steelwork = b.build();
+    b.resetTransform();
+}
 
-    // transformers with cooling fins
-    b.clear();
-    MeshBuilder ins;
-    for (int k = 0; k < 4; k++) {
-        float x = 84 + k * 4.5f, z = 60;
-        b.box(Vec3(x - 1.5f, 5, z - 2), Vec3(x + 1.5f, 8.5f, z + 2));
-        for (int f = 0; f < 6; f++) b.box(Vec3(x - 1.8f, 5.3f, z - 1.6f + f * 0.65f), Vec3(x + 1.8f, 8.0f, z - 1.5f + f * 0.65f));
-        for (int i = 0; i < 3; i++) {
-            float iz = z - 1.2f + i * 1.2f;
-            for (int d = 0; d < 6; d++) {                         // stacked insulator discs
-                ins.setTransform(translate(Vec3(x, 8.5f + d * 0.38f, iz)));
-                ins.cylinder(0.28f, 0.18f, 0.3f, 12, true, true);
+// one complete line bay at offset dz (the main bay has dz = 0)
+static void bay(MeshBuilder& steel, MeshBuilder& por, MeshBuilder& brk, MeshBuilder& tnk, MeshBuilder& cond,
+                MeshBuilder* green, MeshBuilder* red, float dz) {
+    for (int p = 0; p < 3; p++) {
+        float z = BAY_Z[p] + dz;
+        // disconnector: two post insulators on a stand + the switch blade
+        for (int s = 0; s < 2; s++) {
+            float x = 96.0f + s * 2.2f;
+            steel.box(Vec3(x - 0.15f, 5.0f, z - 0.15f), Vec3(x + 0.15f, 8.5f, z + 0.15f));
+            insulator(por, Vec3(x, 8.5f, z), 2.4f, 0.22f);
+        }
+        steel.beam(Vec3(96.0f, 11.0f, z), Vec3(98.2f, 11.0f, z), 0.08f, 0.08f);
+        // circuit breaker: frame + interrupter column + mechanism box
+        steel.box(Vec3(BREAKER_X - 0.6f, 5.0f, z - 0.6f), Vec3(BREAKER_X + 0.6f, 5.3f, z + 0.6f));
+        for (int l = 0; l < 4; l++)
+            steel.box(Vec3(BREAKER_X - 0.55f + (l % 2) * 1.0f, 5.3f, z - 0.55f + (l / 2) * 1.0f),
+                      Vec3(BREAKER_X - 0.45f + (l % 2) * 1.0f, 8.6f, z - 0.45f + (l / 2) * 1.0f));
+        brk.box(Vec3(BREAKER_X - 0.5f, 8.6f, z - 0.5f), Vec3(BREAKER_X + 0.5f, 9.6f, z + 0.5f));
+        brk.setTransform(translate(Vec3(BREAKER_X, 9.6f, z)));
+        brk.cylinder(0.3f, 0.3f, 3.2f, 16, true, true);
+        brk.resetTransform();
+        if (green) green->box(Vec3(BREAKER_X - 0.52f, 9.15f, z - 0.15f), Vec3(BREAKER_X - 0.5f, 9.35f, z + 0.05f));
+        if (red) red->box(Vec3(BREAKER_X - 0.52f, 8.85f, z - 0.15f), Vec3(BREAKER_X - 0.5f, 9.05f, z + 0.05f));
+        // current transformer: insulator column + head tank
+        steel.box(Vec3(106.85f, 5.0f, z - 0.15f), Vec3(107.15f, 8.0f, z + 0.15f));
+        insulator(por, Vec3(107.0f, 8.0f, z), 3.2f, 0.3f);
+        tnk.setTransform(translate(Vec3(107.0f, 11.3f, z)));
+        tnk.cylinder(0.45f, 0.45f, 1.0f, 16, true, true);
+        tnk.resetTransform();
+        // surge arrester
+        steel.box(Vec3(110.85f, 5.0f, z - 0.15f), Vec3(111.15f, 8.0f, z + 0.15f));
+        insulator(por, Vec3(111.0f, 8.0f, z), 3.0f, 0.18f);
+        // conductors joining the equipment (sagging tubes)
+        Vec3 pts[6] = {Vec3(GANTRY_X, 16.0f, z), Vec3(96.0f, 11.0f, z), Vec3(BREAKER_X, 12.8f, z),
+                       Vec3(107.0f, 12.3f, z), Vec3(111.0f, 11.1f, z), Vec3(LINE_GANTRY_X, 20.0f, z)};
+        for (int i = 0; i < 5; i++) {
+            Vec3 prev = pts[i];
+            for (int k = 1; k <= 8; k++) {
+                float u = k / 8.0f;
+                Vec3 q = mix(pts[i], pts[i + 1], u) - Vec3(0, 0.6f * 4 * u * (1 - u), 0);
+                cond.beam(prev, q, 0.06f, 0.06f);
+                prev = q;
             }
         }
     }
-    ins.resetTransform();
-    transformers = b.build();
-    insulators = ins.build();
-
-    // wires: sagging lines made of short segments
-    b.clear();
-    auto wire = [&](Vec3 a, Vec3 c, float sag) {
-        Vec3 prev = a;
-        for (int i = 1; i <= 16; i++) {
-            float u = i / 16.0f;
-            Vec3 p = mix(a, c, u) - Vec3(0, sag * 4 * u * (1 - u), 0);
-            b.beam(prev, p, 0.06f, 0.06f);
-            prev = p;
-        }
-    };
-    for (int k = 0; k < 3; k++) {
-        wire(Vec3(80, 20.0f, 58 + k * 4), Vec3(100, 20.0f, 58 + k * 4), 1.2f);
-        wire(Vec3(110 - 7 + k * 7, 5 + 22 + 5, 85), Vec3(140 - 7 + k * 7, 40 + 22 + 5, 120), 3.0f);
+    // gantries at both ends of the bay
+    for (int g = 0; g < 2; g++) {
+        float x = g == 0 ? GANTRY_X : LINE_GANTRY_X, h = g == 0 ? 11.4f : 15.4f;
+        Switchyard::latticeTower(steel, Vec3(x, 5.0f, 56.0f + dz), 0.8f, 0.5f, h, 5);
+        Switchyard::latticeTower(steel, Vec3(x, 5.0f, 68.0f + dz), 0.8f, 0.5f, h, 5);
+        steel.beam(Vec3(x, 5.0f + h, 56.0f + dz), Vec3(x, 5.0f + h, 68.0f + dz), 0.7f, 0.7f);
     }
-    wires = b.build();
-
-    // fence
-    b.clear();
-    for (float x = 73; x <= 115; x += 2.5f) {
-        b.box(Vec3(x, 5, 45), Vec3(x + 0.08f, 7, 45.08f));
-        b.box(Vec3(x, 5, 95), Vec3(x + 0.08f, 7, 95.08f));
-    }
-    b.box(Vec3(73, 6.9f, 45), Vec3(115, 7.0f, 45.1f));
-    b.box(Vec3(73, 6.9f, 95), Vec3(115, 7.0f, 95.1f));
-    fence = b.build();
 }
 
-void Switchyard::draw(Renderer& r) {
+void Switchyard::build() {
+    MeshBuilder b;
+    b.box(Vec3(75, -3, 44), Vec3(124, 5, 124));            // gravel platform
+    platform = b.build();
+
+    MeshBuilder steel, por, brk, tnk, cond, green, red;
+    bay(steel, por, brk, tnk, cond, &green, &red, 0.0f);
+    bay(steel, por, brk, tnk, cond, nullptr, nullptr, 16.0f);   // two more bays: a busy yard
+    bay(steel, por, brk, tnk, cond, nullptr, nullptr, 32.0f);
+    steelwork = steel.build();
+    porcelain = por.build();
+    breakers = brk.build();
+    tanks = tnk.build();
+    conductors = cond.build();
+    lampsGreen = green.build();
+    lampsRed = red.build();
+
+    // control building + fence
+    b.clear();
+    b.box(Vec3(80, 5, 104), Vec3(94, 10, 116));
+    b.box(Vec3(79.8f, 10, 103.8f), Vec3(94.2f, 10.4f, 116.2f));
+    building = b.build();
+    b.clear();
+    for (int k = 0; k < 4; k++) b.box(Vec3(79.95f, 7, 105.5f + k * 2.6f), Vec3(80.0f, 8.6f, 107.0f + k * 2.6f));
+    windowsMesh = b.build();
+    b.clear();
+    for (float x = 76; x <= 123; x += 2.5f) {
+        b.box(Vec3(x, 5, 45), Vec3(x + 0.08f, 7, 45.08f));
+        b.box(Vec3(x, 5, 123), Vec3(x + 0.08f, 7, 123.08f));
+    }
+    b.box(Vec3(76, 6.9f, 45), Vec3(123, 7.0f, 45.1f));
+    b.box(Vec3(76, 6.9f, 123), Vec3(123, 7.0f, 123.1f));
+    fence = b.build();
+
+    // glowing power along the main bay: before and after the breaker
+    glowBefore.begin();
+    glowAfter.begin();
+    for (int p = 0; p < 3; p++) {
+        float z = BAY_Z[p];
+        Vec3 pts[6] = {Vec3(GANTRY_X, 16.0f, z), Vec3(96.0f, 11.0f, z), Vec3(BREAKER_X, 12.8f, z),
+                       Vec3(107.0f, 12.3f, z), Vec3(111.0f, 11.1f, z), Vec3(LINE_GANTRY_X, 20.0f, z)};
+        std::vector<Vec3> before, after;
+        for (int i = 0; i < 5; i++)
+            for (int k = 0; k <= 8; k++) {
+                float u = k / 8.0f;
+                Vec3 q = mix(pts[i], pts[i + 1], u) - Vec3(0, 0.6f * 4 * u * (1 - u), 0);
+                if (i < 2) before.push_back(q); else after.push_back(q);
+            }
+        glowBefore.add(before, 0.07f);
+        glowAfter.add(after, 0.07f);
+    }
+    glowBefore.finish();
+    glowAfter.finish();
+}
+
+void Switchyard::draw(Renderer& r, float breakerClosed01) {
     Mat4 I;
-    r.drawMesh(platform, I, Mat::concrete(1.0f, Vec3(0.5f, 0.5f, 0.48f)));
-    r.drawMesh(steelwork, I, Mat::steel(Vec3(0.6f, 0.6f, 0.6f)));
-    r.drawMesh(transformers, I, Mat::paint(Vec3(0.38f, 0.42f, 0.4f)));
-    r.drawMesh(insulators, I, Mat::plain(Vec3(0.55f, 0.35f, 0.25f), 0.6f, 60.0f));
-    r.drawMesh(wires, I, Mat::plain(Vec3(0.15f, 0.15f, 0.15f)));
+    Material gravel;
+    gravel.color = Vec3(0.42f, 0.41f, 0.4f);
+    gravel.pattern = PAT_SOIL;
+    gravel.patternScale = 2.0f;
+    r.drawMesh(platform, I, gravel);
+    r.drawMesh(steelwork, I, Mat::steel(Vec3(0.62f, 0.63f, 0.64f)));
+    r.drawMesh(porcelain, I, Mat::plain(Vec3(0.4f, 0.19f, 0.11f), 0.8f, 80.0f));
+    r.drawMesh(breakers, I, Mat::paint(Vec3(0.7f, 0.72f, 0.74f), 0.6f));
+    r.drawMesh(tanks, I, Mat::paint(Vec3(0.75f, 0.76f, 0.78f), 0.6f));
+    r.drawMesh(conductors, I, Mat::steel(Vec3(0.7f, 0.7f, 0.68f)));
+    r.drawMesh(building, I, Mat::concrete(1.0f, Vec3(0.62f, 0.6f, 0.56f)));
+    r.drawMesh(windowsMesh, I, Mat::glow(Vec3(1.6f, 1.7f, 1.8f)));
     r.drawMesh(fence, I, Mat::steel());
+    // breaker status lamps: green = closed (connected), red = open
+    r.drawMesh(lampsGreen, I, Mat::glow(Vec3(0.2f, 4.0f, 0.6f) * (0.08f + breakerClosed01)));
+    r.drawMesh(lampsRed, I, Mat::glow(Vec3(4.0f, 0.3f, 0.2f) * (1.08f - breakerClosed01)));
+}
+
+void Switchyard::drawGlow(Renderer& r, float before, float after, float speed) {
+    glowBefore.draw(r, Mat4(), Vec3(0.6f, 0.9f, 2.4f), before, speed, 1.6f);
+    glowAfter.draw(r, Mat4(), Vec3(0.6f, 0.9f, 2.4f), after, speed, 1.6f);
 }

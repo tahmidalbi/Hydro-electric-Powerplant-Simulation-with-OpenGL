@@ -35,7 +35,7 @@ float Terrain::height(float x, float z) {
     float W = 122.0f + (z < -30.0f ? (-z - 30.0f) * 0.45f : 0.0f) + (z > 110.0f ? (z - 110.0f) * 0.3f : 0.0f);
     if (z > -10.0f && z < 70.0f) W = 122.0f;            // keep the dam abutments straight
     else W += (n - 0.5f) * 60.0f;
-    float base = z < -8.0f ? 16.0f : 0.5f;              // reservoir bed / river bed
+    float base = z < -2.0f ? 16.0f : 0.5f;              // reservoir bed / river bed
     float h = base + (fbm(x * 0.05f, z * 0.05f) - 0.5f) * 2.0f;
     float d = ax - W;
     if (d > 0.0f) {
@@ -43,6 +43,10 @@ float Terrain::height(float x, float z) {
         float rough = fbm(x * 0.02f, z * 0.02f);
         h += mountain * (0.75f + 0.5f * rough) + (fbm(x * 0.08f, z * 0.08f) - 0.5f) * 14.0f * std::fmin(d / 20.0f, 1.0f);
     }
+    // dry river bank on the right side below the powerhouse: the switchyard
+    // and the power line stand on it
+    float bank = smoothstepf(66.0f, 80.0f, x) * smoothstepf(84.0f, 104.0f, z);
+    if (bank > 0.0f) h = std::fmax(h, mixf(h, 6.0f + (fbm(x * 0.03f, z * 0.03f) - 0.5f) * 1.5f, bank));
     return h;
 }
 

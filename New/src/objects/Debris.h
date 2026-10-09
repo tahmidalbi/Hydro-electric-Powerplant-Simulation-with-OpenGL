@@ -7,7 +7,9 @@
 //    * buoyancy pulls it to its floating depth, with a little bobbing,
 //    * it tumbles slowly (rotation speed),
 //    * at the trash rack: pieces bigger than the gap between the bars STOP
-//      (they pile up), small leaves slip through.
+//      (they pile up), small leaves slip through and sink into the intake.
+//  The simulation runs in a local frame (x = flow direction); 'parent' moves
+//  that frame to the trash-rack cage in the world (TRANSFORMATION).
 // =============================================================================
 #pragma once
 #include <vector>
@@ -29,20 +31,21 @@ struct DebrisPiece {
     bool stuck = false;
     float stuckTime = 0;
     Vec3 stuckPos, stuckRot;   // where it ends up resting against the rack
-    bool raking = false;       // being lifted out by the rake
 };
 
 class Debris {
 public:
     std::vector<DebrisPiece> pieces;
-    float rackX = -4.0f;       // upstream face of the rack
+    float rackX = -4.0f;       // upstream face of the rack (local x)
     float waterY = 6.5f;
     float current = 2.4f;      // m/s
+    float sinkY = -1e9f;       // pieces that pass the bars sink towards this height ...
+    float endX = 48.0f;        // ... and disappear when they reach this x (the intake mouth)
+    Mat4 parent;               // places the debris' local frame (x = flow) into the world
 
     void build();
     void reset();
     void spawnWave(int wave);
-    void rakeClean();
     void update(float dt, float time, ParticleSystem& splash);
     void draw(Renderer& r);
     int stuckCount() const;

@@ -20,6 +20,7 @@ void main() {
     float sh = shadowFactor(vWorldPos, N);
     vec3 col = albedo * (vAmbient + vSunDiffuse * sh) + vSunSpec * sh + emis;
     col += albedo * uSunColor * caustics(vWorldPos, N) * sh;
+    if (uPattern == PAT_BEAM || uPattern == PAT_FLOW) col = emis;   // pure glow, no lighting
     col = applyFog(col, vWorldPos);
     FragColor = vec4(finalColor(col), alpha);
 }

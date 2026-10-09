@@ -1,24 +1,33 @@
 // =============================================================================
 //  Powerhouse.h  -  the power station at the foot of the dam, drawn as a
-//  CUT-AWAY (the wall facing the camera is removed) like the video at 0:04.
+//  CUT-AWAY (the wall facing the camera, x = 46, is removed).
 //
-//  Inside: the penstock pipe comes down the dam face, runs through the
-//  building, past a bulb turbine (spinning blades) and leaves into the river.
-//  A vertical shaft drives the generator above it: copper rotor + poles that
-//  spin inside a stator housing, with an exciter cap on top.
+//  Inside, from the bottom up:
+//    * the TURBINE PIT: the penstock ends at the main inlet valve, which feeds
+//      the spiral casing of the Francis turbine (TurbineUnit),
+//    * the vertical SHAFT with its guide bearing and coupling flange,
+//    * the GENERATOR FLOOR with the generator (Generator), yellow railings,
+//      control cabinets, big windows and the overhead crane.
+//  The building, the penstock and the shaft are drawn here; the valve,
+//  turbine and generator are separate objects.
 // =============================================================================
 #pragma once
 #include "../render/Renderer.h"
 #include "CutawayPipe.h"
 
+namespace HouseDims {
+    const float X0 = 46, X1 = 72, Z0 = 46, Z1 = 80;     // inside of the hall (x = 46 is the cut)
+    const float PIT_Y = 3.5f, GEN_FLOOR_Y = 14.0f, ROOF_Y = 28.0f;
+}
+
 class Powerhouse {
 public:
-    CutawayPipe penstock;            // the pipe that feeds the turbine
-    float turbineZ = 61.0f;          // where the turbine sits along z
+    CutawayPipe penstock;            // from the intake conduit down to the main inlet valve
 
     void build();
-    void draw(Renderer& r, float rotorAngle);
+    void draw(Renderer& r, float shaftAngle);
 
 private:
-    Mesh walls, floors, cutFaces, stator, statorTop, rotor, poles, shaft, bulb, blades, cabinets, leds, motor, crane, lights;
+    Mesh foundation, walls, floors, cutFaces, windows, mullions, railings, stairs, cabinets, leds;
+    Mesh crane, lights, shaft, bearings, outlet;
 };

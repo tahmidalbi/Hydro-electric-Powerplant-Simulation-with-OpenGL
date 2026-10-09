@@ -1,5 +1,6 @@
 #include "Ui.h"
 #include "Font.h"
+#include <cmath>
 #include <glad/gl.h>
 
 bool Ui::init() {
@@ -61,11 +62,17 @@ float Ui::textWidth(const std::string& s, float scale) const {
 void Ui::text(float x, float y, const std::string& s, float scale, const Vec4& c) {
     const float texW = (float)(Font::COUNT * Font::CELL_W);
     float cw = Font::CELL_W * scale, ch = Font::CELL_H * scale;
+    // start on a whole pixel, and keep the texture coordinates a little inside the
+    // glyph's cell: otherwise the last pixel column can pick up the first column of
+    // the NEXT glyph in the atlas (a stray bar after K, L, E ...)
+    x = std::floor(x + 0.5f);
+    y = std::floor(y + 0.5f);
+    const float inset = 0.05f / texW;
     for (char raw : s) {
         char ch_ = (raw >= 'a' && raw <= 'z') ? (char)(raw - 32) : raw;   // only capitals are drawn
         int cell = ch_ - Font::FIRST;
         if (cell > 0 && cell < Font::COUNT) {
-            float u0 = cell * Font::CELL_W / texW, u1 = (cell * Font::CELL_W + Font::CELL_W) / texW;
+            float u0 = cell * Font::CELL_W / texW + inset, u1 = (cell * Font::CELL_W + Font::CELL_W) / texW - inset;
             vertex(x, y, u0, 0, c);      vertex(x + cw, y, u1, 0, c);  vertex(x + cw, y + ch, u1, 1, c);
             vertex(x, y, u0, 0, c);      vertex(x + cw, y + ch, u1, 1, c); vertex(x, y + ch, u0, 1, c);
         }
