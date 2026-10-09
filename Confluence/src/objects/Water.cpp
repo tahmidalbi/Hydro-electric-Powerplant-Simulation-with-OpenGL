@@ -5,6 +5,7 @@
 #include "../core/Material.h"
 #include "../core/Noise.h"
 #include "../core/Render.h"
+#include "../core/Shader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <algorithm>
 #include <cmath>
@@ -99,9 +100,18 @@ void addWaterGrid(MeshData& d, const std::vector<float>& as, const std::vector<f
     d.indices.insert(d.indices.end(), idx.begin(), idx.end());
 }
 
+// Step 7: the lake is now a fine grid, because the vertex shader moves every
+// vertex up and down with the waves -- a few huge triangles could not show a
+// 6 m wave. Fine (1.2 m) where the camera sees the water, coarse far away and
+// under the hills. It stops at the dam's upstream face (s = 1).
 MeshData buildLake() {
     MeshData d;
-    d.append(gridData(24), Layout::damRoot() * T({40.0f, Layout::LAKE_LEVEL, -299.0f}) * S({760.0f, 1.0f, 600.0f}));
+    std::vector<float> as = samples(-340.0f, 420.0f, {{-20.0f, 150.0f, 1.2f}, {-80.0f, 260.0f, 2.5f}}, 12.0f);
+    std::vector<float> ss = samples(-600.0f, 1.0f, {{-230.0f, 1.0f, 1.2f}, {-330.0f, -230.0f, 2.5f}}, 12.0f);
+    addWaterGrid(d, as, ss, [](float, float, vec3& col) {
+        col = vec3(1.0f);                       // colour comes from the material
+        return Layout::LAKE_LEVEL;              // flat; the shader adds the waves
+    });
     return d;
 }
 
@@ -152,51 +162,34 @@ MeshData buildWheelFall() {
     return d;
 }
 
-// Soft spray: overlapping translucent puffs, densest where the falls land.
-MeshData buildSpray() {
-    MeshData d;
-    MeshData puff = sphereData(10, 16);
-    Noise::Rng rng(99);
-    const mat4 dam = Layout::damRoot();
-    auto add = [&](float a, float y, float s, vec3 size) { d.append(puff, dam * T({a, y, s}) * S(size)); };
-
-    // The billowing cloud at the foot of the two chutes, drifting downstream.
-    for (int i = 0; i < 170; ++i) {
-        float t = std::pow(rng.next(), 1.5f);
-        float s = 9.5f + t * 19.0f;
-        float a = SPILL_A + rng.range(-11.5f, 11.5f) * (1.0f + 0.4f * t);
-        float height = 6.5f * (1.0f - t) + 1.2f;
-        float r = rng.range(2.2f, 4.6f) * (1.0f - 0.45f * t);
-        add(a, rng.range(0.4f + 0.8f * t, height), s, {r * 2.0f, r * 1.4f, r * 2.2f});
-    }
-    // Mist climbing the lower half of each chute.
-    for (int i = 0; i < 40; ++i) {
-        float y = rng.range(1.0f, 5.5f);
-        float s = 3.84f + 0.536f * (11.5f - y) + rng.range(0.6f, 2.0f);
-        float r = rng.range(1.0f, 2.0f);
-        add(SPILL_A + rng.range(-9.0f, 9.0f), y, s, {r * 2.0f, r * 1.6f, r * 1.6f});
-    }
-    // Spray where the wheel channel spills into the river.
-    for (int i = 0; i < 35; ++i) {
-        float r = rng.range(0.9f, 1.8f);
-        add(WHEEL_A + rng.range(-3.5f, 3.5f), rng.range(0.6f, 2.6f), rng.range(16.8f, 21.0f), {r * 2.0f, r * 1.4f, r * 2.0f});
-    }
-    return d;
 }
 
-}
+// (The old static spray mesh is gone: since Step 6 the spray is made of
+// moving particles whose amount follows the gate -- systems/Effects.cpp.)
 
-Water::Water() : lake(buildLake()), river(buildRiver()), wheelFall(buildWheelFall()), spray(buildSpray()) {}
+Water::Water() : lake(buildLake()), river(buildRiver()), wheelFall(buildWheelFall()) {}
 
-void Water::draw(const Shader& shader) const {
+void Water::drawSurfaces(const Shader& shader, float flowStrength) const {
+    // Lake: the vertex shader lifts this flat grid onto the waves (Step 7).
+    shader.setInt("uWaveMode", 1);
     drawMesh(shader, lake, mat4(1.0f), Materials::LAKE_WATER);
+    shader.setInt("uWaveMode", 0);
+
+    // River: foam streaks drift downstream (Step 6). The white foam baked into
+    // the mesh was made for the default 45% gate, so the shader scales it:
+    // gate shut -> calm blue water, gate wide open -> full white water.
+    setFlowUniforms(shader, 2, 1.5f + 3.5f * flowStrength);
+    shader.setFloat("uFoam", std::min(1.0f, 0.12f + flowStrength / 0.45f));
     drawMesh(shader, river, mat4(1.0f), Materials::WATER);
+    setFlowUniforms(shader, 0, 0.0f);
 }
 
-void Water::drawFalls(const Shader& shader) const {
-    drawMesh(shader, wheelFall, mat4(1.0f), Materials::WATERFALL);
-}
-
-void Water::drawSpray(const Shader& shader) const {
-    drawMesh(shader, spray, mat4(1.0f), Materials::MIST);
+void Water::drawFalls(const Shader& shader, float flowStrength) const {
+    // The wheel channel is fed by the same gate: no flow -> no fall.
+    if (flowStrength < 0.02f) return;
+    Material sheet = Materials::WATERFALL;
+    sheet.alpha *= std::min(1.0f, flowStrength * 2.5f);   // thin and glassy when barely open
+    setFlowUniforms(shader, 1, 2.2f + 2.0f * flowStrength);
+    drawMesh(shader, wheelFall, mat4(1.0f), sheet);
+    setFlowUniforms(shader, 0, 0.0f);
 }

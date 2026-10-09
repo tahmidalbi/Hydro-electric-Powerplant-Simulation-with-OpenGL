@@ -153,11 +153,19 @@ MeshData buildSpillwayWater() {
 Dam::Dam() : structure(buildStructure()), spillway(buildSpillwayWater()) {}
 
 glm::vec3 Dam::wheelMount() { return WHEEL_MOUNT; }
+float Dam::bayCentre(int bay) { return (PIER_X[bay] + PIER_X[bay + 1]) * 0.5f; }
+float Dam::bayWidth() { return BAY_W; }
+float Dam::spillwayStart() { return SPILL_X0; }
+float Dam::spillwayEnd() { return SPILL_X1; }
 
-void Dam::draw(const Shader& shader, const MeshLibrary& m, float gateOpening) const {
+void Dam::draw(const Shader& shader) const {
+    drawMesh(shader, structure, Layout::damRoot(), Materials::CONCRETE);
+}
+
+// Hierarchy (Step 6):  gate = damRoot * gateSlot(bay) * Translate(0, lift(opening), 0)
+// The gate only ever moves along its slot's local y axis.
+void Dam::drawGates(const Shader& shader, const MeshLibrary& m, float gateOpening) const {
     const mat4 root = Layout::damRoot();
-    drawMesh(shader, structure, root, Materials::MATTE);
-
     for (int bay = 0; bay < 2; ++bay) {
         float cx = (PIER_X[bay] + PIER_X[bay + 1]) * 0.5f;
         glm::mat4 gateSlot = root * T({cx, SPILL_CREST, 0.3f});
@@ -166,7 +174,14 @@ void Dam::draw(const Shader& shader, const MeshLibrary& m, float gateOpening) co
     }
 }
 
+// Step 6: the sheets follow the gate. Barely open -> a thin glassy film;
+// fully open -> a thick white torrent whose streaks race down faster.
+// Shut -> nothing at all (a closed gate cannot pour).
 void Dam::drawSpillwayWater(const Shader& shader, float gateOpening) const {
-    if (gateOpening > 0.02f)
-        drawMesh(shader, spillway, Layout::damRoot(), Materials::WATERFALL);
+    if (gateOpening <= 0.02f) return;
+    Material sheet = Materials::WATERFALL;
+    sheet.alpha *= std::min(1.0f, gateOpening * 2.5f);
+    setFlowUniforms(shader, 1, 2.5f + 3.0f * gateOpening);
+    drawMesh(shader, spillway, Layout::damRoot(), sheet);
+    setFlowUniforms(shader, 0, 0.0f);
 }

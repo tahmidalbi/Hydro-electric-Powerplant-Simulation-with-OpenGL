@@ -1,17 +1,16 @@
 #version 330 core
+// lighting_common.glsl + surface_common.glsl are pasted here by Shader.cpp,
+// so the sky and the water's reflection use the SAME skyColour() function.
 in vec2 vNdc;
 out vec4 FragColor;
 
 uniform mat4 uInvViewProj;
 uniform vec3 uCamPos;
-uniform vec3 uHorizon;
-uniform vec3 uZenith;
 
-// Vertical gradient keyed to the real view-ray elevation, so it stays
-// consistent while orbiting: pale haze at the horizon, deep blue overhead.
+// Turn this pixel back into a view ray, then colour it by where it points:
+// pale haze at the horizon, deep blue overhead, a warm glow around the sun.
 void main() {
     vec4 world = uInvViewProj * vec4(vNdc, 1.0, 1.0);
     vec3 dir = normalize(world.xyz / world.w - uCamPos);
-    float t = smoothstep(0.0, 0.55, max(dir.y, 0.0));
-    FragColor = vec4(mix(uHorizon, uZenith, pow(t, 0.8)), 1.0);
+    FragColor = vec4(skyColour(dir), 1.0);
 }

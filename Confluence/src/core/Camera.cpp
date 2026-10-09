@@ -17,6 +17,18 @@ glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(getPosition(), target, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
+glm::mat4 Camera::projection(float aspect, float verticalFovDeg, bool orthographic) const {
+    float halfFov = glm::radians(verticalFovDeg) * 0.5f;
+    if (!orthographic)
+        return glm::perspective(2.0f * halfFov, aspect, NEAR_PLANE, FAR_PLANE);
+    float halfHeight = radius * std::tan(halfFov);
+    // The box starts BEHIND the eye (negative near plane). An orthographic
+    // camera has no "eye point" really - every ray is parallel - so hills
+    // between the orbit eye and the target must not be clipped away. Depth is
+    // linear in ortho, so the long box costs no depth precision worth noting.
+    return glm::ortho(-halfHeight * aspect, halfHeight * aspect, -halfHeight, halfHeight, -FAR_PLANE, FAR_PLANE);
+}
+
 void Camera::lookFrom(const glm::vec3& eye, const glm::vec3& tgt) {
     target = tgt;
     glm::vec3 offset = eye - tgt;

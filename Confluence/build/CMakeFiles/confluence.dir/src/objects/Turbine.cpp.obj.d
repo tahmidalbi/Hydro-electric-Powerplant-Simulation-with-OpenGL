@@ -252,15 +252,4 @@ CMakeFiles/confluence.dir/src/objects/Turbine.cpp.obj: \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/MeshLibrary.h \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Mesh.h \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Render.h \
- C:/msys64/mingw64/include/glm/gtc/matrix_transform.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_projection.hpp \
- C:/msys64/mingw64/include/glm/gtc/constants.hpp \
- C:/msys64/mingw64/include/glm/ext/scalar_constants.hpp \
- C:/msys64/mingw64/include/glm/ext/scalar_constants.inl \
- C:/msys64/mingw64/include/glm/gtc/constants.inl \
- C:/msys64/mingw64/include/glm/ext/matrix_projection.inl \
- C:/msys64/mingw64/include/glm/ext/matrix_clip_space.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_clip_space.inl \
- C:/msys64/mingw64/include/glm/ext/matrix_transform.hpp \
- C:/msys64/mingw64/include/glm/ext/matrix_transform.inl \
- C:/msys64/mingw64/include/glm/gtc/matrix_transform.inl
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Transform.h

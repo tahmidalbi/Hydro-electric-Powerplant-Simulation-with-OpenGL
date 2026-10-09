@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include <glad/gl.h>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 
@@ -35,10 +36,20 @@ void addDisc(MeshData& d, float y, float r, int segments, float ny) {
 
 }
 
+// Grows capacity geometrically (at least doubling). Reserving exactly
+// "size + n" on every append would reallocate and copy the whole array each
+// time -- quadratic work. The forest alone appends thousands of trees, which
+// used to take ~10 s at start-up.
+template <typename T>
+static void reserveForAppend(std::vector<T>& v, size_t extra) {
+    size_t needed = v.size() + extra;
+    if (needed > v.capacity()) v.reserve(std::max(needed, v.capacity() * 2));
+}
+
 void MeshData::append(const MeshData& other, const glm::mat4& model, const glm::vec3& color) {
     glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
     unsigned int base = (unsigned int)vertices.size();
-    vertices.reserve(vertices.size() + other.vertices.size());
+    reserveForAppend(vertices, other.vertices.size());
     for (const Vertex& v : other.vertices) {
         Vertex t;
         t.position = glm::vec3(model * glm::vec4(v.position, 1.0f));
@@ -46,7 +57,7 @@ void MeshData::append(const MeshData& other, const glm::mat4& model, const glm::
         t.color = v.color * color;
         vertices.push_back(t);
     }
-    indices.reserve(indices.size() + other.indices.size());
+    reserveForAppend(indices, other.indices.size());
     for (unsigned int i : other.indices) indices.push_back(base + i);
 }
 

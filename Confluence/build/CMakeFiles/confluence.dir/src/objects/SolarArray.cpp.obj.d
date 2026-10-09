@@ -249,9 +249,12 @@ CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj: \
  C:/msys64/mingw64/include/glm/integer.hpp \
  C:/msys64/mingw64/include/glm/detail/func_integer.inl \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Mesh.h \
+ C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Placement.h \
+ C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Terrain.h \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Material.h \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Noise.h \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Render.h \
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Transform.h \
  C:/msys64/mingw64/include/glm/gtc/matrix_transform.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_projection.hpp \
  C:/msys64/mingw64/include/glm/gtc/constants.hpp \
@@ -263,4 +266,12 @@ CMakeFiles/confluence.dir/src/objects/SolarArray.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/matrix_clip_space.inl \
  C:/msys64/mingw64/include/glm/ext/matrix_transform.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_transform.inl \
- C:/msys64/mingw64/include/glm/gtc/matrix_transform.inl
+ C:/msys64/mingw64/include/glm/gtc/matrix_transform.inl \
+ C:/msys64/mingw64/include/c++/16.2.0/algorithm \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/stl_algo.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/algorithmfwd.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/stl_heap.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/uniform_int_dist.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/stl_tempbuf.h \
+ C:/msys64/mingw64/include/c++/16.2.0/pstl/glue_algorithm_defs.h \
+ C:/msys64/mingw64/include/c++/16.2.0/pstl/execution_defs.h

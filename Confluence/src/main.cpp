@@ -1,80 +1,48 @@
+// Confluence - 3D Hybrid Renewable Energy Power Plant (OpenGL 3.3)
+//
+// main.cpp only sets things up and runs the loop. Every frame is:
+//
+//     1. INPUT   - read the keyboard/mouse          (input/Input.cpp)
+//     2. UPDATE  - advance the plant by sim time    (systems/Animation.cpp)
+//                  spray / wake particles           (systems/Effects.cpp)
+//                  camera glides and boat follow    (systems/CameraDirector.cpp)
+//     3. RENDER  - draw what the state says         (rendering/FrameRenderer.cpp)
+//
+// Geometry, lighting maths and key handling live in their own folders.
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
-#include <cstring>
 #include <iostream>
-#include <string>
+#include <memory>
+#include <new>
 
-#include "core/Camera.h"
-#include "core/Light.h"
-#include "core/MeshLibrary.h"
-#include "core/Render.h"
+#include "App.h"
 #include "core/Screenshot.h"
-#include "core/Shader.h"
+#include "input/CommandLine.h"
+#include "input/Input.h"
 #include "objects/Layout.h"
-#include "objects/Scene.h"
-#include "objects/Sky.h"
+#include "rendering/FrameRenderer.h"
+#include "systems/Animation.h"
+#include "systems/CameraDirector.h"
+#include "systems/Effects.h"
+#include "tests/SelfTest.h"
+#include "ui/Hud.h"
 
-static Camera g_camera;
-static bool   g_dragging = false;
-static double g_lastX = 0.0, g_lastY = 0.0;
+namespace {
 
-static int g_shadingMode = 2; // 0 Flat, 1 Gouraud, 2 Phong
-static int g_termMask    = 7; // ambient | diffuse | specular
-static int g_useBlinn    = 0;
+// Screenshot size: the concept image's aspect ratio.
+constexpr int SHOT_W = 1216, SHOT_H = 900;
 
-static void resetCamera() { g_camera.lookFrom(Layout::CAMERA_EYE, Layout::CAMERA_TARGET); }
-
-static void mouseButtonCallback(GLFWwindow* window, int button, int action, int /*mods*/) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT) {
-        g_dragging = (action == GLFW_PRESS);
-        glfwGetCursorPos(window, &g_lastX, &g_lastY);
-    }
-}
-
-static void cursorPosCallback(GLFWwindow*, double x, double y) {
-    if (g_dragging) {
-        g_camera.orbit((float)((x - g_lastX) * 0.3), (float)((y - g_lastY) * 0.3));
-        g_lastX = x;
-        g_lastY = y;
-    }
-}
-
-static void scrollCallback(GLFWwindow*, double /*xoff*/, double yoff) {
-    g_camera.zoom((float)(-yoff * 4.0));
-}
-
-static void keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/) {
-    if (action != GLFW_PRESS) return;
-    if (key == GLFW_KEY_ESCAPE) glfwSetWindowShouldClose(window, true);
-    if (key == GLFW_KEY_1) g_shadingMode = 0;
-    if (key == GLFW_KEY_2) g_shadingMode = 1;
-    if (key == GLFW_KEY_3) g_shadingMode = 2;
-    if (key == GLFW_KEY_B) g_useBlinn = !g_useBlinn;
-    if (key == GLFW_KEY_R) resetCamera();
-}
-
-int main(int argc, char** argv) {
-    // --screenshot <file.bmp>: render one frame offscreen at the reference size and exit.
-    std::string screenshotPath;
-    for (int i = 1; i + 1 < argc; ++i)
-        if (std::strcmp(argv[i], "--screenshot") == 0) screenshotPath = argv[i + 1];
-    const bool offscreen = !screenshotPath.empty();
-
-    if (!glfwInit()) {
-        std::cerr << "glfwInit failed\n";
-        return -1;
-    }
+GLFWwindow* createWindow(bool hidden) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_SAMPLES, 4);
-    if (offscreen) glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+    if (hidden) glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
     // Same aspect as the concept image, shrunk if the monitor is small.
-    int winW = 1216, winH = 900;
+    int winW = SHOT_W, winH = SHOT_H;
     if (GLFWmonitor* monitor = glfwGetPrimaryMonitor()) {
         int mx, my, mw, mh;
         glfwGetMonitorWorkarea(monitor, &mx, &my, &mw, &mh);
@@ -83,10 +51,28 @@ int main(int argc, char** argv) {
             winW = (int)(winH * Layout::ASPECT);
         }
     }
+    return glfwCreateWindow(winW, winH, "Confluence - 3D Hybrid Renewable Energy Power Plant", nullptr, nullptr);
+}
 
-    GLFWwindow* window = glfwCreateWindow(winW, winH, "Confluence - 3D Hybrid Renewable Energy Power Plant", nullptr, nullptr);
+}
+
+int main(int argc, char** argv) {
+    App app;
+    CommandLineOptions options = CommandLine::parse(argc, argv, app);
+    if (!options.valid) return 2;
+
+    // --selftest: pure maths checks, no window needed.
+    if (options.selfTest) return SelfTest::runAll() == 0 ? 0 : 1;
+
+    const bool offscreen = !options.screenshotPath.empty();
+
+    if (!glfwInit()) {
+        std::cerr << "glfwInit failed\n";
+        return -1;
+    }
+    GLFWwindow* window = createWindow(offscreen);
     if (!window) {
-        std::cerr << "Window creation failed\n";
+        std::cerr << "Window creation failed (OpenGL 3.3 core is required)\n";
         glfwTerminate();
         return -1;
     }
@@ -95,83 +81,93 @@ int main(int argc, char** argv) {
 
     if (!gladLoadGL((GLADloadfunc)glfwGetProcAddress)) {
         std::cerr << "gladLoadGL failed\n";
+        glfwTerminate();
         return -1;
     }
-
-    glfwSetMouseButtonCallback(window, mouseButtonCallback);
-    glfwSetCursorPosCallback(window, cursorPosCallback);
-    glfwSetScrollCallback(window, scrollCallback);
-    glfwSetKeyCallback(window, keyCallback);
+    std::cout << "OpenGL " << glGetString(GL_VERSION) << " | " << glGetString(GL_RENDERER) << std::endl;
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     // Face culling stays off: several thin single-sided parts (panel cells,
-    // water sheets) must be visible from either side.
+    // water sheets) must be visible from either side, and the gallery's
+    // mirrored L-shape has reversed winding.
     glDisable(GL_CULL_FACE);
 
-    Shader phong("shaders/phong.vert", "shaders/phong.frag");
-    MeshLibrary meshes;
-    Scene scene;
-    Sky sky;
-    resetCamera();
+    // GPU resources (shaders, meshes) need the context, so they are created now.
+    // unique_ptr: destroyed before glfwTerminate() below.
+    std::unique_ptr<FrameRenderer> renderer;
+    try {
+        renderer = std::make_unique<FrameRenderer>();
+    } catch (const std::bad_alloc&) {
+        std::cerr << "Start-up failed: out of memory while building the scene meshes.\n"
+                     "Close other programs and start Confluence again." << std::endl;
+        glfwTerminate();
+        return -1;
+    } catch (const std::exception& e) {
+        std::cerr << "Start-up failed: " << e.what()
+                  << "\n(If a shader file was not found: run the program from the folder that contains 'shaders'.)" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
 
-    // Sun high behind the viewer's left shoulder, so the faces of the dam,
-    // turbines, panels and the hillside turned towards the camera are sunlit.
-    Light sun;
-    sun.type      = 0;
-    sun.direction = glm::normalize(glm::vec3(0.20f, -0.85f, -0.50f));
-    sun.diffuse   = {1.00f, 0.97f, 0.90f};
-    sun.specular  = {1.0f, 1.0f, 1.0f};
+    // Start state: plant/lamp at their start pose, then any command-line
+    // changes, then the cameras (the boat view needs the boat's position).
+    Input::resetScene(app);
+    CommandLine::applyPlantOptions(options, app);
+    Input::resetGalleryCamera(app);
+    CameraViews::goTo(app.director, app.sceneCamera, options.view, app.state.plant, true);
 
-    // Sky fill: soft light from the opposite side so shaded faces aren't black.
-    Light fill;
-    fill.type      = 0;
-    fill.direction = glm::normalize(glm::vec3(-0.6f, -0.5f, 0.6f));
-    fill.diffuse   = {0.28f, 0.31f, 0.36f};
-    fill.specular  = {0.0f, 0.0f, 0.0f};
-
-    const glm::vec3 globalAmbient(0.40f, 0.44f, 0.50f);
-
-    auto renderFrame = [&](int w, int h) {
-        glViewport(0, 0, w, h);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        float aspect = h > 0 ? (float)w / (float)h : 1.0f;
-        glm::mat4 projection = glm::perspective(glm::radians(Layout::VFOV_DEG), aspect, 0.3f, 1500.0f);
-        glm::mat4 view = g_camera.getViewMatrix();
-
-        sky.draw(view, projection, g_camera.getPosition());
-
-        phong.use();
-        phong.setMat4("uProjection", projection);
-        phong.setMat4("uView", view);
-        phong.setVec3("uViewPos", g_camera.getPosition());
-        phong.setVec3("uGlobalAmbient", globalAmbient);
-        phong.setInt("uShadingMode", g_shadingMode);
-        phong.setInt("uTermMask", g_termMask);
-        phong.setInt("uUseBlinn", g_useBlinn);
-        phong.setVec3("uFogColor", Layout::FOG_COLOR);
-        phong.setFloat("uFogDensity", Layout::FOG_DENSITY);
-        setLightUniforms(phong, 0, sun);
-        setLightUniforms(phong, 1, fill);
-
-        scene.draw(phong, meshes);
-    };
+    // --advance: run the whole simulation forward in fixed 1/60 s steps (for screenshots).
+    for (float t = 0.0f; t < options.advanceSeconds; t += 1.0f / 60.0f) {
+        Animation::update(app.state.plant, 1.0f / 60.0f);
+        Effects::update(app.particles, app.effects, app.state.plant, 1.0f / 60.0f);
+        CameraViews::update(app.director, app.sceneCamera, app.state.plant, 1.0f / 60.0f);
+    }
 
     if (offscreen) {
-        bool ok = captureToBmp(1216, 900, renderFrame, screenshotPath);
+        bool ok = captureToBmp(SHOT_W, SHOT_H, [&](int w, int h) { renderer->render(w, h, app, 60.0f, 0.4f); },
+                               options.screenshotPath);
+        if (ok) std::cout << "Saved " << options.screenshotPath << std::endl;
+        renderer.reset();
         glfwTerminate();
         return ok ? 0 : 1;
     }
 
+    Input::install(window, &app);
+    Hud::printHelp();
+    Hud::TitleTimer titleTimer;
+
     while (!glfwWindowShouldClose(window)) {
+        // 1. INPUT
         glfwPollEvents();
+        app.clock.tick(glfwGetTime());
+        Input::handleHeldKeys(window, app, app.clock.realDelta());
+
+        // 2. UPDATE (simulation time: 0 while paused; the camera uses real time)
+        Animation::update(app.state.plant, app.clock.simulationDelta());
+        Effects::update(app.particles, app.effects, app.state.plant, app.clock.simulationDelta());
+        CameraViews::update(app.director, app.sceneCamera, app.state.plant, app.clock.realDelta());
+
+        // 3. RENDER
         int fbW, fbH;
         glfwGetFramebufferSize(window, &fbW, &fbH);
-        renderFrame(fbW, fbH);
+        renderer->render(fbW, fbH, app, titleTimer.fps(), (float)glfwGetTime());
         glfwSwapBuffers(window);
+
+        // F12: render the same frame again into a picture file.
+        if (app.screenshotRequested) {
+            app.screenshotRequested = false;
+            std::string path = "confluence_shot_" + std::to_string(++app.screenshotCount) + ".bmp";
+            if (captureToBmp(fbW, fbH, [&](int w, int h) { renderer->render(w, h, app, titleTimer.fps(), (float)glfwGetTime()); }, path))
+                std::cout << "  > screenshot saved: " << path << std::endl;
+        }
+
+        // Live status in the window title, ~4 times per second.
+        if (titleTimer.update(app.clock.realDelta()))
+            glfwSetWindowTitle(window, Hud::statusLine(app, renderer->galleryDetailSummary(app), titleTimer.fps()).c_str());
     }
 
+    renderer.reset();   // free GPU objects while the context still exists
     glfwTerminate();
     return 0;
 }

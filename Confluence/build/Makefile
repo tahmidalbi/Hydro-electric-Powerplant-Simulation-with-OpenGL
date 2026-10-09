@@ -152,6 +152,30 @@ src/core/Camera.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Camera.cpp.s
 .PHONY : src/core/Camera.cpp.s
 
+src/core/Clock.obj: src/core/Clock.cpp.obj
+.PHONY : src/core/Clock.obj
+
+# target to build an object file
+src/core/Clock.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Clock.cpp.obj
+.PHONY : src/core/Clock.cpp.obj
+
+src/core/Clock.i: src/core/Clock.cpp.i
+.PHONY : src/core/Clock.i
+
+# target to preprocess a source file
+src/core/Clock.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Clock.cpp.i
+.PHONY : src/core/Clock.cpp.i
+
+src/core/Clock.s: src/core/Clock.cpp.s
+.PHONY : src/core/Clock.s
+
+# target to generate assembly for a file
+src/core/Clock.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Clock.cpp.s
+.PHONY : src/core/Clock.cpp.s
+
 src/core/Mesh.obj: src/core/Mesh.cpp.obj
 .PHONY : src/core/Mesh.obj
 
@@ -248,6 +272,30 @@ src/core/Shader.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Shader.cpp.s
 .PHONY : src/core/Shader.cpp.s
 
+src/core/Transform.obj: src/core/Transform.cpp.obj
+.PHONY : src/core/Transform.obj
+
+# target to build an object file
+src/core/Transform.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Transform.cpp.obj
+.PHONY : src/core/Transform.cpp.obj
+
+src/core/Transform.i: src/core/Transform.cpp.i
+.PHONY : src/core/Transform.i
+
+# target to preprocess a source file
+src/core/Transform.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Transform.cpp.i
+.PHONY : src/core/Transform.cpp.i
+
+src/core/Transform.s: src/core/Transform.cpp.s
+.PHONY : src/core/Transform.s
+
+# target to generate assembly for a file
+src/core/Transform.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/core/Transform.cpp.s
+.PHONY : src/core/Transform.cpp.s
+
 src/glad.obj: src/glad.c.obj
 .PHONY : src/glad.obj
 
@@ -271,6 +319,78 @@ src/glad.s: src/glad.c.s
 src/glad.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/glad.c.s
 .PHONY : src/glad.c.s
+
+src/input/CommandLine.obj: src/input/CommandLine.cpp.obj
+.PHONY : src/input/CommandLine.obj
+
+# target to build an object file
+src/input/CommandLine.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/CommandLine.cpp.obj
+.PHONY : src/input/CommandLine.cpp.obj
+
+src/input/CommandLine.i: src/input/CommandLine.cpp.i
+.PHONY : src/input/CommandLine.i
+
+# target to preprocess a source file
+src/input/CommandLine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/CommandLine.cpp.i
+.PHONY : src/input/CommandLine.cpp.i
+
+src/input/CommandLine.s: src/input/CommandLine.cpp.s
+.PHONY : src/input/CommandLine.s
+
+# target to generate assembly for a file
+src/input/CommandLine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/CommandLine.cpp.s
+.PHONY : src/input/CommandLine.cpp.s
+
+src/input/Input.obj: src/input/Input.cpp.obj
+.PHONY : src/input/Input.obj
+
+# target to build an object file
+src/input/Input.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/Input.cpp.obj
+.PHONY : src/input/Input.cpp.obj
+
+src/input/Input.i: src/input/Input.cpp.i
+.PHONY : src/input/Input.i
+
+# target to preprocess a source file
+src/input/Input.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/Input.cpp.i
+.PHONY : src/input/Input.cpp.i
+
+src/input/Input.s: src/input/Input.cpp.s
+.PHONY : src/input/Input.s
+
+# target to generate assembly for a file
+src/input/Input.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/Input.cpp.s
+.PHONY : src/input/Input.cpp.s
+
+src/input/Picking.obj: src/input/Picking.cpp.obj
+.PHONY : src/input/Picking.obj
+
+# target to build an object file
+src/input/Picking.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/Picking.cpp.obj
+.PHONY : src/input/Picking.cpp.obj
+
+src/input/Picking.i: src/input/Picking.cpp.i
+.PHONY : src/input/Picking.i
+
+# target to preprocess a source file
+src/input/Picking.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/Picking.cpp.i
+.PHONY : src/input/Picking.cpp.i
+
+src/input/Picking.s: src/input/Picking.cpp.s
+.PHONY : src/input/Picking.s
+
+# target to generate assembly for a file
+src/input/Picking.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/input/Picking.cpp.s
+.PHONY : src/input/Picking.cpp.s
 
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
@@ -415,6 +535,30 @@ src/objects/Fence.s: src/objects/Fence.cpp.s
 src/objects/Fence.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Fence.cpp.s
 .PHONY : src/objects/Fence.cpp.s
+
+src/objects/Placement.obj: src/objects/Placement.cpp.obj
+.PHONY : src/objects/Placement.obj
+
+# target to build an object file
+src/objects/Placement.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Placement.cpp.obj
+.PHONY : src/objects/Placement.cpp.obj
+
+src/objects/Placement.i: src/objects/Placement.cpp.i
+.PHONY : src/objects/Placement.i
+
+# target to preprocess a source file
+src/objects/Placement.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Placement.cpp.i
+.PHONY : src/objects/Placement.cpp.i
+
+src/objects/Placement.s: src/objects/Placement.cpp.s
+.PHONY : src/objects/Placement.s
+
+# target to generate assembly for a file
+src/objects/Placement.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/Placement.cpp.s
+.PHONY : src/objects/Placement.cpp.s
 
 src/objects/Rocks.obj: src/objects/Rocks.cpp.obj
 .PHONY : src/objects/Rocks.obj
@@ -632,6 +776,414 @@ src/objects/WaterWheel.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/objects/WaterWheel.cpp.s
 .PHONY : src/objects/WaterWheel.cpp.s
 
+src/rendering/FrameRenderer.obj: src/rendering/FrameRenderer.cpp.obj
+.PHONY : src/rendering/FrameRenderer.obj
+
+# target to build an object file
+src/rendering/FrameRenderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/rendering/FrameRenderer.cpp.obj
+.PHONY : src/rendering/FrameRenderer.cpp.obj
+
+src/rendering/FrameRenderer.i: src/rendering/FrameRenderer.cpp.i
+.PHONY : src/rendering/FrameRenderer.i
+
+# target to preprocess a source file
+src/rendering/FrameRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/rendering/FrameRenderer.cpp.i
+.PHONY : src/rendering/FrameRenderer.cpp.i
+
+src/rendering/FrameRenderer.s: src/rendering/FrameRenderer.cpp.s
+.PHONY : src/rendering/FrameRenderer.s
+
+# target to generate assembly for a file
+src/rendering/FrameRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/rendering/FrameRenderer.cpp.s
+.PHONY : src/rendering/FrameRenderer.cpp.s
+
+src/rendering/ParticleRenderer.obj: src/rendering/ParticleRenderer.cpp.obj
+.PHONY : src/rendering/ParticleRenderer.obj
+
+# target to build an object file
+src/rendering/ParticleRenderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/rendering/ParticleRenderer.cpp.obj
+.PHONY : src/rendering/ParticleRenderer.cpp.obj
+
+src/rendering/ParticleRenderer.i: src/rendering/ParticleRenderer.cpp.i
+.PHONY : src/rendering/ParticleRenderer.i
+
+# target to preprocess a source file
+src/rendering/ParticleRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/rendering/ParticleRenderer.cpp.i
+.PHONY : src/rendering/ParticleRenderer.cpp.i
+
+src/rendering/ParticleRenderer.s: src/rendering/ParticleRenderer.cpp.s
+.PHONY : src/rendering/ParticleRenderer.s
+
+# target to generate assembly for a file
+src/rendering/ParticleRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/rendering/ParticleRenderer.cpp.s
+.PHONY : src/rendering/ParticleRenderer.cpp.s
+
+src/systems/Animation.obj: src/systems/Animation.cpp.obj
+.PHONY : src/systems/Animation.obj
+
+# target to build an object file
+src/systems/Animation.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Animation.cpp.obj
+.PHONY : src/systems/Animation.cpp.obj
+
+src/systems/Animation.i: src/systems/Animation.cpp.i
+.PHONY : src/systems/Animation.i
+
+# target to preprocess a source file
+src/systems/Animation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Animation.cpp.i
+.PHONY : src/systems/Animation.cpp.i
+
+src/systems/Animation.s: src/systems/Animation.cpp.s
+.PHONY : src/systems/Animation.s
+
+# target to generate assembly for a file
+src/systems/Animation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Animation.cpp.s
+.PHONY : src/systems/Animation.cpp.s
+
+src/systems/BoatSystem.obj: src/systems/BoatSystem.cpp.obj
+.PHONY : src/systems/BoatSystem.obj
+
+# target to build an object file
+src/systems/BoatSystem.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/BoatSystem.cpp.obj
+.PHONY : src/systems/BoatSystem.cpp.obj
+
+src/systems/BoatSystem.i: src/systems/BoatSystem.cpp.i
+.PHONY : src/systems/BoatSystem.i
+
+# target to preprocess a source file
+src/systems/BoatSystem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/BoatSystem.cpp.i
+.PHONY : src/systems/BoatSystem.cpp.i
+
+src/systems/BoatSystem.s: src/systems/BoatSystem.cpp.s
+.PHONY : src/systems/BoatSystem.s
+
+# target to generate assembly for a file
+src/systems/BoatSystem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/BoatSystem.cpp.s
+.PHONY : src/systems/BoatSystem.cpp.s
+
+src/systems/CameraDirector.obj: src/systems/CameraDirector.cpp.obj
+.PHONY : src/systems/CameraDirector.obj
+
+# target to build an object file
+src/systems/CameraDirector.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/CameraDirector.cpp.obj
+.PHONY : src/systems/CameraDirector.cpp.obj
+
+src/systems/CameraDirector.i: src/systems/CameraDirector.cpp.i
+.PHONY : src/systems/CameraDirector.i
+
+# target to preprocess a source file
+src/systems/CameraDirector.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/CameraDirector.cpp.i
+.PHONY : src/systems/CameraDirector.cpp.i
+
+src/systems/CameraDirector.s: src/systems/CameraDirector.cpp.s
+.PHONY : src/systems/CameraDirector.s
+
+# target to generate assembly for a file
+src/systems/CameraDirector.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/CameraDirector.cpp.s
+.PHONY : src/systems/CameraDirector.cpp.s
+
+src/systems/Effects.obj: src/systems/Effects.cpp.obj
+.PHONY : src/systems/Effects.obj
+
+# target to build an object file
+src/systems/Effects.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Effects.cpp.obj
+.PHONY : src/systems/Effects.cpp.obj
+
+src/systems/Effects.i: src/systems/Effects.cpp.i
+.PHONY : src/systems/Effects.i
+
+# target to preprocess a source file
+src/systems/Effects.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Effects.cpp.i
+.PHONY : src/systems/Effects.cpp.i
+
+src/systems/Effects.s: src/systems/Effects.cpp.s
+.PHONY : src/systems/Effects.s
+
+# target to generate assembly for a file
+src/systems/Effects.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Effects.cpp.s
+.PHONY : src/systems/Effects.cpp.s
+
+src/systems/Environment.obj: src/systems/Environment.cpp.obj
+.PHONY : src/systems/Environment.obj
+
+# target to build an object file
+src/systems/Environment.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Environment.cpp.obj
+.PHONY : src/systems/Environment.cpp.obj
+
+src/systems/Environment.i: src/systems/Environment.cpp.i
+.PHONY : src/systems/Environment.i
+
+# target to preprocess a source file
+src/systems/Environment.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Environment.cpp.i
+.PHONY : src/systems/Environment.cpp.i
+
+src/systems/Environment.s: src/systems/Environment.cpp.s
+.PHONY : src/systems/Environment.s
+
+# target to generate assembly for a file
+src/systems/Environment.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Environment.cpp.s
+.PHONY : src/systems/Environment.cpp.s
+
+src/systems/HydroSystem.obj: src/systems/HydroSystem.cpp.obj
+.PHONY : src/systems/HydroSystem.obj
+
+# target to build an object file
+src/systems/HydroSystem.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/HydroSystem.cpp.obj
+.PHONY : src/systems/HydroSystem.cpp.obj
+
+src/systems/HydroSystem.i: src/systems/HydroSystem.cpp.i
+.PHONY : src/systems/HydroSystem.i
+
+# target to preprocess a source file
+src/systems/HydroSystem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/HydroSystem.cpp.i
+.PHONY : src/systems/HydroSystem.cpp.i
+
+src/systems/HydroSystem.s: src/systems/HydroSystem.cpp.s
+.PHONY : src/systems/HydroSystem.s
+
+# target to generate assembly for a file
+src/systems/HydroSystem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/HydroSystem.cpp.s
+.PHONY : src/systems/HydroSystem.cpp.s
+
+src/systems/Particles.obj: src/systems/Particles.cpp.obj
+.PHONY : src/systems/Particles.obj
+
+# target to build an object file
+src/systems/Particles.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Particles.cpp.obj
+.PHONY : src/systems/Particles.cpp.obj
+
+src/systems/Particles.i: src/systems/Particles.cpp.i
+.PHONY : src/systems/Particles.i
+
+# target to preprocess a source file
+src/systems/Particles.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Particles.cpp.i
+.PHONY : src/systems/Particles.cpp.i
+
+src/systems/Particles.s: src/systems/Particles.cpp.s
+.PHONY : src/systems/Particles.s
+
+# target to generate assembly for a file
+src/systems/Particles.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Particles.cpp.s
+.PHONY : src/systems/Particles.cpp.s
+
+src/systems/Waves.obj: src/systems/Waves.cpp.obj
+.PHONY : src/systems/Waves.obj
+
+# target to build an object file
+src/systems/Waves.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Waves.cpp.obj
+.PHONY : src/systems/Waves.cpp.obj
+
+src/systems/Waves.i: src/systems/Waves.cpp.i
+.PHONY : src/systems/Waves.i
+
+# target to preprocess a source file
+src/systems/Waves.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Waves.cpp.i
+.PHONY : src/systems/Waves.cpp.i
+
+src/systems/Waves.s: src/systems/Waves.cpp.s
+.PHONY : src/systems/Waves.s
+
+# target to generate assembly for a file
+src/systems/Waves.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/Waves.cpp.s
+.PHONY : src/systems/Waves.cpp.s
+
+src/systems/WindSystem.obj: src/systems/WindSystem.cpp.obj
+.PHONY : src/systems/WindSystem.obj
+
+# target to build an object file
+src/systems/WindSystem.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/WindSystem.cpp.obj
+.PHONY : src/systems/WindSystem.cpp.obj
+
+src/systems/WindSystem.i: src/systems/WindSystem.cpp.i
+.PHONY : src/systems/WindSystem.i
+
+# target to preprocess a source file
+src/systems/WindSystem.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/WindSystem.cpp.i
+.PHONY : src/systems/WindSystem.cpp.i
+
+src/systems/WindSystem.s: src/systems/WindSystem.cpp.s
+.PHONY : src/systems/WindSystem.s
+
+# target to generate assembly for a file
+src/systems/WindSystem.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/systems/WindSystem.cpp.s
+.PHONY : src/systems/WindSystem.cpp.s
+
+src/tests/SelfTest.obj: src/tests/SelfTest.cpp.obj
+.PHONY : src/tests/SelfTest.obj
+
+# target to build an object file
+src/tests/SelfTest.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/tests/SelfTest.cpp.obj
+.PHONY : src/tests/SelfTest.cpp.obj
+
+src/tests/SelfTest.i: src/tests/SelfTest.cpp.i
+.PHONY : src/tests/SelfTest.i
+
+# target to preprocess a source file
+src/tests/SelfTest.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/tests/SelfTest.cpp.i
+.PHONY : src/tests/SelfTest.cpp.i
+
+src/tests/SelfTest.s: src/tests/SelfTest.cpp.s
+.PHONY : src/tests/SelfTest.s
+
+# target to generate assembly for a file
+src/tests/SelfTest.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/tests/SelfTest.cpp.s
+.PHONY : src/tests/SelfTest.cpp.s
+
+src/ui/BitmapFont.obj: src/ui/BitmapFont.cpp.obj
+.PHONY : src/ui/BitmapFont.obj
+
+# target to build an object file
+src/ui/BitmapFont.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/BitmapFont.cpp.obj
+.PHONY : src/ui/BitmapFont.cpp.obj
+
+src/ui/BitmapFont.i: src/ui/BitmapFont.cpp.i
+.PHONY : src/ui/BitmapFont.i
+
+# target to preprocess a source file
+src/ui/BitmapFont.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/BitmapFont.cpp.i
+.PHONY : src/ui/BitmapFont.cpp.i
+
+src/ui/BitmapFont.s: src/ui/BitmapFont.cpp.s
+.PHONY : src/ui/BitmapFont.s
+
+# target to generate assembly for a file
+src/ui/BitmapFont.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/BitmapFont.cpp.s
+.PHONY : src/ui/BitmapFont.cpp.s
+
+src/ui/DemoGallery.obj: src/ui/DemoGallery.cpp.obj
+.PHONY : src/ui/DemoGallery.obj
+
+# target to build an object file
+src/ui/DemoGallery.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/DemoGallery.cpp.obj
+.PHONY : src/ui/DemoGallery.cpp.obj
+
+src/ui/DemoGallery.i: src/ui/DemoGallery.cpp.i
+.PHONY : src/ui/DemoGallery.i
+
+# target to preprocess a source file
+src/ui/DemoGallery.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/DemoGallery.cpp.i
+.PHONY : src/ui/DemoGallery.cpp.i
+
+src/ui/DemoGallery.s: src/ui/DemoGallery.cpp.s
+.PHONY : src/ui/DemoGallery.s
+
+# target to generate assembly for a file
+src/ui/DemoGallery.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/DemoGallery.cpp.s
+.PHONY : src/ui/DemoGallery.cpp.s
+
+src/ui/Hud.obj: src/ui/Hud.cpp.obj
+.PHONY : src/ui/Hud.obj
+
+# target to build an object file
+src/ui/Hud.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/Hud.cpp.obj
+.PHONY : src/ui/Hud.cpp.obj
+
+src/ui/Hud.i: src/ui/Hud.cpp.i
+.PHONY : src/ui/Hud.i
+
+# target to preprocess a source file
+src/ui/Hud.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/Hud.cpp.i
+.PHONY : src/ui/Hud.cpp.i
+
+src/ui/Hud.s: src/ui/Hud.cpp.s
+.PHONY : src/ui/Hud.s
+
+# target to generate assembly for a file
+src/ui/Hud.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/Hud.cpp.s
+.PHONY : src/ui/Hud.cpp.s
+
+src/ui/HudOverlay.obj: src/ui/HudOverlay.cpp.obj
+.PHONY : src/ui/HudOverlay.obj
+
+# target to build an object file
+src/ui/HudOverlay.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/HudOverlay.cpp.obj
+.PHONY : src/ui/HudOverlay.cpp.obj
+
+src/ui/HudOverlay.i: src/ui/HudOverlay.cpp.i
+.PHONY : src/ui/HudOverlay.i
+
+# target to preprocess a source file
+src/ui/HudOverlay.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/HudOverlay.cpp.i
+.PHONY : src/ui/HudOverlay.cpp.i
+
+src/ui/HudOverlay.s: src/ui/HudOverlay.cpp.s
+.PHONY : src/ui/HudOverlay.s
+
+# target to generate assembly for a file
+src/ui/HudOverlay.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/HudOverlay.cpp.s
+.PHONY : src/ui/HudOverlay.cpp.s
+
+src/ui/HudRenderer.obj: src/ui/HudRenderer.cpp.obj
+.PHONY : src/ui/HudRenderer.obj
+
+# target to build an object file
+src/ui/HudRenderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/HudRenderer.cpp.obj
+.PHONY : src/ui/HudRenderer.cpp.obj
+
+src/ui/HudRenderer.i: src/ui/HudRenderer.cpp.i
+.PHONY : src/ui/HudRenderer.i
+
+# target to preprocess a source file
+src/ui/HudRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/HudRenderer.cpp.i
+.PHONY : src/ui/HudRenderer.cpp.i
+
+src/ui/HudRenderer.s: src/ui/HudRenderer.cpp.s
+.PHONY : src/ui/HudRenderer.s
+
+# target to generate assembly for a file
+src/ui/HudRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\confluence.dir\build.make CMakeFiles/confluence.dir/src/ui/HudRenderer.cpp.s
+.PHONY : src/ui/HudRenderer.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -644,6 +1196,9 @@ help:
 	@echo ... src/core/Camera.obj
 	@echo ... src/core/Camera.i
 	@echo ... src/core/Camera.s
+	@echo ... src/core/Clock.obj
+	@echo ... src/core/Clock.i
+	@echo ... src/core/Clock.s
 	@echo ... src/core/Mesh.obj
 	@echo ... src/core/Mesh.i
 	@echo ... src/core/Mesh.s
@@ -656,9 +1211,21 @@ help:
 	@echo ... src/core/Shader.obj
 	@echo ... src/core/Shader.i
 	@echo ... src/core/Shader.s
+	@echo ... src/core/Transform.obj
+	@echo ... src/core/Transform.i
+	@echo ... src/core/Transform.s
 	@echo ... src/glad.obj
 	@echo ... src/glad.i
 	@echo ... src/glad.s
+	@echo ... src/input/CommandLine.obj
+	@echo ... src/input/CommandLine.i
+	@echo ... src/input/CommandLine.s
+	@echo ... src/input/Input.obj
+	@echo ... src/input/Input.i
+	@echo ... src/input/Input.s
+	@echo ... src/input/Picking.obj
+	@echo ... src/input/Picking.i
+	@echo ... src/input/Picking.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
@@ -677,6 +1244,9 @@ help:
 	@echo ... src/objects/Fence.obj
 	@echo ... src/objects/Fence.i
 	@echo ... src/objects/Fence.s
+	@echo ... src/objects/Placement.obj
+	@echo ... src/objects/Placement.i
+	@echo ... src/objects/Placement.s
 	@echo ... src/objects/Rocks.obj
 	@echo ... src/objects/Rocks.i
 	@echo ... src/objects/Rocks.s
@@ -704,6 +1274,57 @@ help:
 	@echo ... src/objects/WaterWheel.obj
 	@echo ... src/objects/WaterWheel.i
 	@echo ... src/objects/WaterWheel.s
+	@echo ... src/rendering/FrameRenderer.obj
+	@echo ... src/rendering/FrameRenderer.i
+	@echo ... src/rendering/FrameRenderer.s
+	@echo ... src/rendering/ParticleRenderer.obj
+	@echo ... src/rendering/ParticleRenderer.i
+	@echo ... src/rendering/ParticleRenderer.s
+	@echo ... src/systems/Animation.obj
+	@echo ... src/systems/Animation.i
+	@echo ... src/systems/Animation.s
+	@echo ... src/systems/BoatSystem.obj
+	@echo ... src/systems/BoatSystem.i
+	@echo ... src/systems/BoatSystem.s
+	@echo ... src/systems/CameraDirector.obj
+	@echo ... src/systems/CameraDirector.i
+	@echo ... src/systems/CameraDirector.s
+	@echo ... src/systems/Effects.obj
+	@echo ... src/systems/Effects.i
+	@echo ... src/systems/Effects.s
+	@echo ... src/systems/Environment.obj
+	@echo ... src/systems/Environment.i
+	@echo ... src/systems/Environment.s
+	@echo ... src/systems/HydroSystem.obj
+	@echo ... src/systems/HydroSystem.i
+	@echo ... src/systems/HydroSystem.s
+	@echo ... src/systems/Particles.obj
+	@echo ... src/systems/Particles.i
+	@echo ... src/systems/Particles.s
+	@echo ... src/systems/Waves.obj
+	@echo ... src/systems/Waves.i
+	@echo ... src/systems/Waves.s
+	@echo ... src/systems/WindSystem.obj
+	@echo ... src/systems/WindSystem.i
+	@echo ... src/systems/WindSystem.s
+	@echo ... src/tests/SelfTest.obj
+	@echo ... src/tests/SelfTest.i
+	@echo ... src/tests/SelfTest.s
+	@echo ... src/ui/BitmapFont.obj
+	@echo ... src/ui/BitmapFont.i
+	@echo ... src/ui/BitmapFont.s
+	@echo ... src/ui/DemoGallery.obj
+	@echo ... src/ui/DemoGallery.i
+	@echo ... src/ui/DemoGallery.s
+	@echo ... src/ui/Hud.obj
+	@echo ... src/ui/Hud.i
+	@echo ... src/ui/Hud.s
+	@echo ... src/ui/HudOverlay.obj
+	@echo ... src/ui/HudOverlay.i
+	@echo ... src/ui/HudOverlay.s
+	@echo ... src/ui/HudRenderer.obj
+	@echo ... src/ui/HudRenderer.i
+	@echo ... src/ui/HudRenderer.s
 .PHONY : help
 
 

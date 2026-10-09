@@ -1,0 +1,158 @@
+[
+  {
+    "page": 1,
+    "title": "Confluence",
+    "body_size": 10.2,
+    "bottom_y": 226.5
+  },
+  {
+    "page": 2,
+    "title": "How to use this plan",
+    "body_size": 10.2,
+    "bottom_y": 150.3
+  },
+  {
+    "page": 3,
+    "title": "Keep your original proposal",
+    "body_size": 10.2,
+    "bottom_y": 211.6
+  },
+  {
+    "page": 4,
+    "title": "What you already have",
+    "body_size": 10.2,
+    "bottom_y": 195.7
+  },
+  {
+    "page": 5,
+    "title": "What the ship project teaches you",
+    "body_size": 10.2,
+    "bottom_y": 153.8
+  },
+  {
+    "page": 6,
+    "title": "What the candle project teaches you",
+    "body_size": 9.6,
+    "bottom_y": 74.1
+  },
+  {
+    "page": 7,
+    "title": "A file structure you can understand",
+    "body_size": 10.2,
+    "bottom_y": 140.9
+  },
+  {
+    "page": 8,
+    "title": "How the files should connect",
+    "body_size": 10.2,
+    "bottom_y": 85.1
+  },
+  {
+    "page": 9,
+    "title": "Step 1 \u2022 Establish time and state",
+    "body_size": 10.2,
+    "bottom_y": 144.6
+  },
+  {
+    "page": 10,
+    "title": "Step 2 \u2022 Prove the transformations",
+    "body_size": 10.2,
+    "bottom_y": 128.6
+  },
+  {
+    "page": 11,
+    "title": "Step 3 \u2022 Make lighting readable",
+    "body_size": 10.2,
+    "bottom_y": 176.3
+  },
+  {
+    "page": 12,
+    "title": "Step 4 \u2022 Show Gouraud and Phong clearly",
+    "body_size": 10.2,
+    "bottom_y": 152.8
+  },
+  {
+    "page": 13,
+    "title": "Step 5 \u2022 Animate turbines and clouds",
+    "body_size": 10.2,
+    "bottom_y": 215.6
+  },
+  {
+    "page": 14,
+    "title": "Step 6 \u2022 Connect the gate, flow, and wheel",
+    "body_size": 10.2,
+    "bottom_y": 226.1
+  },
+  {
+    "page": 15,
+    "title": "Step 7 \u2022 Make water and the boat move together",
+    "body_size": 10.2,
+    "bottom_y": 195.6
+  },
+  {
+    "page": 16,
+    "title": "Step 8 \u2022 Give the user meaningful control",
+    "body_size": 10.2,
+    "bottom_y": 189.1
+  },
+  {
+    "page": 17,
+    "title": "Suggested controls",
+    "body_size": 10.2,
+    "bottom_y": 100.2
+  },
+  {
+    "page": 18,
+    "title": "Step 9 \u2022 Implement a real ray renderer",
+    "body_size": 10.2,
+    "bottom_y": 144.0
+  },
+  {
+    "page": 19,
+    "title": "Step 9 continued \u2022 Follow a ray",
+    "body_size": 10.2,
+    "bottom_y": 175.1
+  },
+  {
+    "page": 20,
+    "title": "Step 9 continued \u2022 Data, speed, and proof",
+    "body_size": 10.2,
+    "bottom_y": 124.5
+  },
+  {
+    "page": 21,
+    "title": "Step 10 \u2022 Add atmosphere and particles",
+    "body_size": 10.2,
+    "bottom_y": 164.3
+  },
+  {
+    "page": 22,
+    "title": "Step 11 \u2022 Add simple energy feedback",
+    "body_size": 10.2,
+    "bottom_y": 151.0
+  },
+  {
+    "page": 23,
+    "title": "Step 12 \u2022 Make it elegant and easy to use",
+    "body_size": 10.2,
+    "bottom_y": 108.6
+  },
+  {
+    "page": 24,
+    "title": "Step 13 \u2022 Check correctness and performance",
+    "body_size": 9.3,
+    "bottom_y": 71.9
+  },
+  {
+    "page": 25,
+    "title": "Step 14 \u2022 Prepare the teacher demonstration",
+    "body_size": 10.2,
+    "bottom_y": 96.5
+  },
+  {
+    "page": 26,
+    "title": "Your final checklist and reading notes",
+    "body_size": 10.2,
+    "bottom_y": 95.5
+  }
+]

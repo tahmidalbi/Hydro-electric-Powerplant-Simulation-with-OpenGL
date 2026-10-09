@@ -252,4 +252,12 @@ CMakeFiles/confluence.dir/src/core/Mesh.cpp.obj: \
  C:/Users/albit/OneDrive/Desktop/COMPUT~1/CONFLU~1/include/KHR/khrplatform.h \
  C:/msys64/mingw64/include/glm/gtc/matrix_inverse.hpp \
  C:/msys64/mingw64/include/glm/detail/setup.hpp \
- C:/msys64/mingw64/include/glm/gtc/matrix_inverse.inl
+ C:/msys64/mingw64/include/glm/gtc/matrix_inverse.inl \
+ C:/msys64/mingw64/include/c++/16.2.0/algorithm \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/stl_algo.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/algorithmfwd.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/stl_heap.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/uniform_int_dist.h \
+ C:/msys64/mingw64/include/c++/16.2.0/bits/stl_tempbuf.h \
+ C:/msys64/mingw64/include/c++/16.2.0/pstl/glue_algorithm_defs.h \
+ C:/msys64/mingw64/include/c++/16.2.0/pstl/execution_defs.h

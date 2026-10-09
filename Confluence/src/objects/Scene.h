@@ -14,15 +14,20 @@
 
 class Shader;
 struct MeshLibrary;
+struct SceneState;
 
-// Owns every scene object and places it -- the static composition of the
-// proposal's concept image (no animation yet).
+// Owns every scene object and draws it -- the composition of the proposal's
+// concept image. Fixed placements come from Placement.h; everything that moves
+// (rotors, gate, wheel, boat, clouds, panel tilt) is read from SceneState.
 class Scene {
 public:
     Scene();
-    void draw(const Shader& shader, const MeshLibrary& meshes) const;
+    // highlight: glow colour for the selected object (Step 8).
+    void draw(const Shader& shader, const MeshLibrary& meshes, const SceneState& state, const glm::vec3& highlight) const;
 
 private:
+    struct CloudSpec { unsigned int seed; glm::vec3 extent; glm::vec3 position; float parallax; };
+
     Terrain terrain;
     Water water;
     Dam dam;
@@ -33,7 +38,5 @@ private:
     Fence fence;
     Boat boat;
     std::vector<Cloud> clouds;
-
-    glm::mat4 turbine1Root, turbine2Root, wheelRoot, solarRoot, boatRoot;
-    std::vector<glm::mat4> cloudRoots;
+    std::vector<CloudSpec> cloudSpecs;
 };

@@ -4,8 +4,8 @@
 
 class Shader;
 
-// White motorboat with a wake trailing behind it. Bow points along local +Z;
-// the root sits on the waterline.
+// White motorboat. Bow points along local +Z; the root sits on the waterline.
+// Where it is and how it rocks comes from BoatSystem::modelMatrix (Step 7).
 class Boat {
 public:
     Boat();

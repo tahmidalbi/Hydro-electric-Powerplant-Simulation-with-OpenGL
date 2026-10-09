@@ -3,12 +3,17 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Light.h"
-#include <glm/gtc/matrix_inverse.hpp>
+#include "Transform.h"
+#include "../objects/Layout.h"
 #include <string>
 
 void drawMesh(const Shader& shader, const Mesh& mesh, const glm::mat4& model, const Material& mat) {
+    drawMeshWithNormalMatrix(shader, mesh, model, Transform::normalMatrix(model), mat);
+}
+
+void drawMeshWithNormalMatrix(const Shader& shader, const Mesh& mesh, const glm::mat4& model,
+                              const glm::mat3& normalMatrix, const Material& mat) {
     shader.setMat4("uModel", model);
-    glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
     shader.setMat3("uNormalMatrix", normalMatrix);
 
     shader.setVec3("uKa", mat.ka);
@@ -18,8 +23,15 @@ void drawMesh(const Shader& shader, const Mesh& mesh, const glm::mat4& model, co
     shader.setFloat("uShininess", mat.shininess);
     shader.setFloat("uAlpha", mat.alpha);
     shader.setFloat("uSoftEdge", mat.softEdge);
+    shader.setFloat("uReflectivity", mat.reflectivity);
 
     mesh.draw();
+}
+
+void setFlowUniforms(const Shader& shader, int flowMode, float speed) {
+    shader.setInt("uFlowMode", flowMode);
+    shader.setVec2("uFlowDir", Layout::damNormal());   // downstream, in world x-z
+    shader.setFloat("uFlowSpeed", speed);
 }
 
 void setLightUniforms(const Shader& shader, int index, const Light& light) {

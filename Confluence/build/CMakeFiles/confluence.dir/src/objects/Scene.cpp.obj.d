@@ -272,7 +272,9 @@ CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj: \
  C:/msys64/mingw64/include/glm/ext/matrix_transform.hpp \
  C:/msys64/mingw64/include/glm/ext/matrix_transform.inl \
  C:/msys64/mingw64/include/glm/gtc/matrix_transform.inl \
+ C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Placement.h \
  C:\Users\albit\OneDrive\Desktop\Computer\ Graphics\ Project\Confluence\src\objects\Turbine.h \
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/SceneState.h \
  C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Shader.h \
  C:/msys64/mingw64/include/c++/16.2.0/string \
  C:/msys64/mingw64/include/c++/16.2.0/bits/stringfwd.h \
@@ -313,5 +315,9 @@ CMakeFiles/confluence.dir/src/objects/Scene.cpp.obj: \
  C:/msys64/mingw64/include/c++/16.2.0/cerrno \
  C:/msys64/mingw64/include/c++/16.2.0/bits/charconv.h \
  C:/msys64/mingw64/include/c++/16.2.0/bits/basic_string.tcc \
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/core/Transform.h \
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/systems/BoatSystem.h \
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/systems/HydroSystem.h \
+ C:/Users/albit/OneDrive/Desktop/Computer\ Graphics\ Project/Confluence/src/systems/WindSystem.h \
  C:/Users/albit/OneDrive/Desktop/COMPUT~1/CONFLU~1/include/glad/gl.h \
  C:/Users/albit/OneDrive/Desktop/COMPUT~1/CONFLU~1/include/KHR/khrplatform.h
