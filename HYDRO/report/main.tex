@@ -1932,33 +1932,6 @@ pixel traces several rays and marches 36 steps through the water.
 \end{tabular}
 \end{table}
 
-\section{Challenges and Solutions}
-
-Several problems only showed up when the pictures were examined closely:
-
-\begin{itemize}
-  \item \textbf{Inconsistent numbers.} Early read-outs did not agree with each other.
-        Moving every value into one data sheet and deriving the rest with the plant
-        equations fixed this permanently.
-  \item \textbf{Things happening too early.} In an early version the turbine could spin
-        before water reached it. The cause-and-effect chain of Table~\ref{tab:cause} and
-        the locked \emph{follow} buttons now enforce the real order.
-  \item \textbf{Cameras inside walls.} Some camera paths passed through piers and
-        walls. Key positions were moved and checked with scripted screenshots.
-  \item \textbf{Shadow acne.} Large flat concrete surfaces showed stripes. A normal
-        offset, a depth bias and polygon offset in the shadow pass removed them.
-  \item \textbf{Over-bright glow.} With bloom, 24 overlapping streamlines in the turbine
-        section turned into a white blur that hid the runner. The section view now uses a
-        separate, dimmer set of lines that covers only the far half of the machine.
-  \item \textbf{Text artefacts.} At a text scale of 1.5, labels placed at fractional
-        pixel positions sampled one column of the next glyph in the font atlas, which
-        showed as a stray bar after some letters. Snapping text to whole pixels and
-        keeping texture coordinates slightly inside each glyph cell fixed it.
-  \item \textbf{Speed.} Drawing the whole plant everywhere was too slow on a laptop GPU.
-        Distance and room-based culling and a quarter-resolution bloom keep every scene
-        above 34 frames per second.
-\end{itemize}
-
 \section{Limitations}
 
 \begin{itemize}
@@ -2097,6 +2070,10 @@ a hydroelectric power plant simulation, which is the project described in this r
 \end{figure}
 
 \chapter{Building and Running the Program}
+
+\section*{Source code}
+The complete source code of the project is available on GitHub:\\
+\url{https://github.com/tahmidalbi/Hydro-electric-Powerplant-Simulation-with-OpenGL}
 
 \section*{Requirements}
 Windows with MSYS2 MinGW-w64 installed at \texttt{C:\textbackslash msys64\textbackslash mingw64} (including the GLFW
